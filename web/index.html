@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="scaffolded-by" content="https://github.com/dart-lang/sdk">
+    <title>Sudoku Helper</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="main.dart.js"></script>
+</head>
+
+<body>
+
+  <div id="board">
+    <div class="tile">1</div>
+    <div class="tile">2</div>
+    <div class="tile">3</div>
+    <div class="tile selected candidates">
+      <div>1</div>
+      <div>2</div>
+      <div>3</div>
+      <div>4</div>
+      <div>5</div>
+      <div>6</div>
+      <div>7</div>
+      <div>8</div>
+      <div>9</div>
+    </div>
+    <div class="tile selected">&nbsp;</div>
+    <div class="tile selected">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+
+    <div class="tile">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+    <div class="tile selected">&nbsp;</div>
+    <div class="tile selected">&nbsp;</div>
+    <div class="tile selected">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+
+    <div class="tile selected">&nbsp;</div>
+    <div class="tile selected">&nbsp;</div>
+    <div class="tile selected">&nbsp;</div>
+    <div class="tile selected">8</div>
+    <div class="tile selected">&nbsp;</div>
+    <div class="tile selected">&nbsp;</div>
+    <div class="tile selected">&nbsp;</div>
+    <div class="tile selected">&nbsp;</div>
+    <div class="tile selected">&nbsp;</div>
+
+    
+    <div class="tile">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+    <div class="tile selected">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+
+    <div class="tile">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+    <div class="tile selected">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+
+    <div class="tile">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+    <div class="tile selected">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+
+
+    <div class="tile">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+    <div class="tile selected">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+    <div class="tile candidates">
+      <div>1</div>
+      <div>2</div>
+      <div>3</div>
+      <div>4</div>
+      <div>5</div>
+      <div>6</div>
+      <div>7</div>
+      <div>8</div>
+      <div>9</div>
+    </div>
+    <div class="tile">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+
+    <div class="tile">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+    <div class="tile selected">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+
+    <div class="tile">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+    <div class="tile selected">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+    <div class="tile">&nbsp;</div>
+  </div>
+
+  <div id="keyboard">
+    <div class="key-row pull-right">
+      <div class="key half-key" id="nominate">nominate</div>
+      <div class="key half-key" id="candidates">candidates</div>
+      <div class="key half-key" id="submit">⏎</div>
+    </div>
+    <div class="key-row">
+      <div class="key" id="one">1</div>
+      <div class="key" id="two">2</div>
+      <div class="key" id="three">3</div>
+      <div class="key" id="four">4</div>
+      <div class="key" id="five">5</div>
+      <div class="key" id="six">6</div>
+      <div class="key" id="seven">7</div>
+      <div class="key" id="eight">8</div>
+      <div class="key" id="nine">9</div>
+    </div>
+  </div>
+
+  <a class="github-link" href="https://github.com/jerold/sudoku" title="Check me out on Github"></a>
+</body>
+</html>
