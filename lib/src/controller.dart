@@ -26,6 +26,9 @@ Map<int, Input> bindings = {
   KeyCode.BACKSPACE: Input.toggle(value: null),
   // finish editing puzzle
   KeyCode.ENTER: Input.entryMode(EntryMode.value),
+  // change to candidate editing
+  67: Input.entryMode(EntryMode.candidate),
+  86: Input.entryMode(EntryMode.value),
 };
 
 const keyIds = {

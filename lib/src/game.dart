@@ -37,56 +37,7 @@ class Game {
     _controller.input.listen(_handleInput);
     _initPuzzle();
 
-    final initialPuzzle = [
-      Input.cursor(column: 0, row: 4),
-      Input.toggle(value: 7),
-      Input.cursor(column: 0, row: 5),
-      Input.toggle(value: 6),
-      Input.cursor(column: 0, row: 8),
-      Input.toggle(value: 3),
-      Input.cursor(column: 1, row: 4),
-      Input.toggle(value: 8),
-      Input.cursor(column: 2, row: 0),
-      Input.toggle(value: 7),
-      Input.cursor(column: 2, row: 1),
-      Input.toggle(value: 3),
-      Input.cursor(column: 2, row: 7),
-      Input.toggle(value: 1),
-      Input.cursor(column: 3, row: 1),
-      Input.toggle(value: 9),
-      Input.cursor(column: 3, row: 2),
-      Input.toggle(value: 2),
-      Input.cursor(column: 3, row: 6),
-      Input.toggle(value: 4),
-      Input.cursor(column: 4, row: 2),
-      Input.toggle(value: 7),
-      Input.cursor(column: 4, row: 4),
-      Input.toggle(value: 6),
-      Input.cursor(column: 4, row: 5),
-      Input.toggle(value: 8),
-      Input.cursor(column: 5, row: 4),
-      Input.toggle(value: 4),
-      Input.cursor(column: 5, row: 7),
-      Input.toggle(value: 7),
-      Input.cursor(column: 7, row: 3),
-      Input.toggle(value: 2),
-      Input.cursor(column: 7, row: 4),
-      Input.toggle(value: 5),
-      Input.cursor(column: 7, row: 5),
-      Input.toggle(value: 7),
-      Input.cursor(column: 7, row: 6),
-      Input.toggle(value: 3),
-      Input.cursor(column: 7, row: 8),
-      Input.toggle(value: 6),
-      Input.cursor(column: 8, row: 0),
-      Input.toggle(value: 4),
-      Input.cursor(column: 8, row: 7),
-      Input.toggle(value: 5),
-      Input.cursor(column: 8, row: 8),
-      Input.toggle(value: 8),
-      Input.entryMode(EntryMode.value),
-    ];
-    initialPuzzle.forEach(_handleInput);
+    hardPuzzle.forEach(_handleInput);
   }
 
   _redraw() => _redrawController.add(_puzzle);
@@ -106,7 +57,6 @@ class Game {
         _handleToggle(input as ToggleInput);
         break;
     }
-    _redraw();
   }
 
   void _initPuzzle() {
@@ -121,17 +71,20 @@ class Game {
   }
 
   void _handleEntryMode(EntryModeInput entryModeInput) {
-    if (_mode == EntryMode.puzzle && _mode != entryModeInput.entryMode) {
-      print("Puzzle START -------------");
-      values.scan((column, row) {
-        if (values[column][row] != null) {
-          print("Input.cursor(column: $column, row: $row),");
-          print("Input.toggle(value: ${values[column][row]}),");
-        }
-      });
-      print("Puzzle END ---------------");
-    }
+    // For saving off a puzzle for reentry on init
+    // if (_mode == EntryMode.puzzle && _mode != entryModeInput.entryMode) {
+    //   print("Puzzle START -------------");
+    //   values.scan((column, row) {
+    //     if (values[column][row] != null) {
+    //       print("Input.cursor(column: $column, row: $row),");
+    //       print("Input.toggle(value: ${values[column][row]}),");
+    //     }
+    //   });
+    //   print("Puzzle END ---------------");
+    // }
+
     _mode = entryModeInput.entryMode;
+    _updateFoundValues();
   }
 
   void _handleCursor(CursorInput cursorInput) {
@@ -142,24 +95,47 @@ class Game {
       _column = cursorInput.column;
       _row = cursorInput.row;
     }
+    _redraw();
   }
 
   void _handleToggle(ToggleInput toggleInput) {
     if (hasCursor) {
-      if (_mode == EntryMode.puzzle) {
-        _puzzle = _puzzle.copy()..toggle(_column!, _row!, toggleInput.value);
-        _updateAutoCandidates();
-      } else if (_mode == EntryMode.value) {
-        _entries = _entries.copy()..toggle(_column!, _row!, toggleInput.value);
-        _updateAutoCandidates();
-      } else if (_mode == EntryMode.candidate) {
-        _userCandidates = _userCandidates.copy()..toggle(_column!, _row!, toggleInput.value);
-      }
+      _toggleCell(_column!, _row!, toggleInput.value, _mode);
     }
   }
 
+  void _toggleCell(int column, int row, int? value, EntryMode mode) {
+    if (mode == EntryMode.puzzle) {
+      _puzzle = _puzzle.copy()..toggle(column, row, value);
+      _updateAutoCandidates();
+    } else if (mode == EntryMode.value) {
+      _entries = _entries.copy()..toggle(column, row, value);
+      _updateAutoCandidates();
+    } else if (mode == EntryMode.candidate) {
+      _userCandidates = _userCandidates.copy()..toggle(column, row, value);
+    }
+    _updateFoundValues();
+  }
+
   void _updateAutoCandidates() {
-    _autoCandidates = considering(values);
-    _findings = find(values, candidates);
+    _autoCandidates = findCandidates(values);
+  }
+
+  void _updateFoundValues() {
+    _findings = findValues(values, candidates);
+
+    if (_mode != EntryMode.puzzle && _findings.isNotEmpty) {
+      final c = _findings.keys.first;
+      final r = _findings[c]!.keys.first;
+      final v = _findings[c]![r]!.keys.first;
+      _clearFoundCell(c, r, v);
+    }
+
+    _redraw();
+  }
+
+  Future _clearFoundCell(int c, int r, int? v) async {
+    await Future.delayed(Duration(milliseconds: 100));
+    _toggleCell(c, r, v, EntryMode.value);
   }
 }

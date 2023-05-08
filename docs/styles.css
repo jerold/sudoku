@@ -1,0 +1,426 @@
+:root {
+  --color-tone-1: #ffffff;
+  --color-tone-2: #818384;
+  --color-tone-3: #565758;
+  --color-tone-4: #3a3a3c;
+  --color-tone-5: #272729;
+  --color-tone-6: #1a1a1b;
+  --color-tone-7: #121213;
+
+  --tile-text-color-1: var(--color-tone-1);
+  --tile-text-color-2: var(--color-tone-2);
+
+  --green: #6aaa64;
+  --darkendGreen: #538d4e;
+  --yellow: #c9b458;
+  --darkendYellow: #b59f3b;
+  --lightGray: #d8d8d8;
+  --gray: #86888a;
+  --darkGray: #939598;
+  --white: #fff;
+  --black: #212121;
+  --orange: #f5793a;
+  --blue: #85c0f9;
+
+  --tile-border-width: 1px;
+
+  --column-count: 9;
+  --tile-size: 36px;
+  --grid-gap-size: 5px;
+  --game-max-width: 500px;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+
+  overscroll-behavior: none;
+  overflow: hidden;
+
+  background-color: var(--black);
+
+  font-family: 'Clear Sans', 'Helvetica Neue', Arial, sans-serif;
+  color: var(--white);
+
+  -webkit-tap-highlight-color: transparent;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+
+  justify-content: center;
+  align-items: center;
+  padding-top: 60px;
+
+  user-select: none;
+}
+
+.github-link {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  height: 40px;
+  width: 40px;
+  opacity: 80%;
+  transition: transform ease-in-out .2s;
+  user-select: none;
+
+  background: url('github-logo.svg');
+  background-size: contain;
+}
+
+#board {
+  position: absolute;
+  top: -33%;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  padding: 2px;
+  width: calc(2 * var(--tile-border-width) * var(--column-count) + var(--tile-size) * var(--column-count) + var(--grid-gap-size) * (var(--column-count) - 1));
+  height: calc(2 * var(--tile-border-width) * var(--column-count) + var(--tile-size) * var(--column-count) + var(--grid-gap-size) * (var(--column-count) - 1));
+
+  display: grid;
+  grid-template-columns: repeat(var(--column-count), 1fr);
+  grid-gap: var(--grid-gap-size);
+  border: dashed 1px var(--color-tone-1);
+}
+
+.candidates {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  font-size: 0.5rem !important;
+  line-height: 0 !important;
+  color: var(--darkGray) !important;
+}
+
+.last-standing {
+  color: var(--orange) !important;
+}
+
+.tile {
+  width: var(--tile-size);
+  height: var(--tile-size);
+  border-radius: 2px;
+
+  justify-content: center;
+  align-items: center;
+  vertical-align: middle;
+  text-align: center;
+
+  font-size: 1.6rem;
+  line-height: var(--tile-size);
+  font-weight: bold;
+  color: var(--tile-text-color);
+  text-transform: uppercase;
+  user-select: none;
+  border: solid var(--tile-border-width) var(--color-tone-4);
+}
+
+.tile:nth-child(1):after {
+  content: '';
+  width: 100%;
+  border-bottom: dashed 1px var(--color-tone-1);
+  position: absolute;
+  left: 0;
+  top: calc(6 * var(--tile-border-width) + 3 * var(--tile-size) + 2 * var(--grid-gap-size) + 4px);
+  z-index: 1;
+}
+
+.tile:nth-child(2):after {
+  content: '';
+  width: 100%;
+  border-bottom: dashed 1px var(--color-tone-1);
+  position: absolute;
+  left: 0;
+  top: calc(12 * var(--tile-border-width) + 6 * var(--tile-size) + 5 * var(--grid-gap-size) + 4px);
+  z-index: 1;
+}
+
+.tile:nth-child(3):after {
+  content: '';
+  height: 100%;
+  border-left: dashed 1px var(--color-tone-1);
+  position: absolute;
+  top: 0;
+  left: calc(6 * var(--tile-border-width) + 3 * var(--tile-size) + 2 * var(--grid-gap-size) + 4px);
+  z-index: 1;
+}
+
+.tile:nth-child(4):after {
+  content: '';
+  height: 100%;
+  border-left: dashed 1px var(--color-tone-1);
+  position: absolute;
+  top: 0;
+  left: calc(12 * var(--tile-border-width) + 6 * var(--tile-size) + 5 * var(--grid-gap-size) + 4px);
+  z-index: 1;
+}
+
+
+/* .tile:nth-child(1):after {
+  content: '';
+  width: var(--grid-gap-size);
+  height: var(--grid-gap-size);
+  background-color: var(--color-tone-1);
+  border-radius: 50%;
+  position: absolute;
+  left: calc(6 * var(--tile-border-width) + 3 * var(--tile-size) + 2 * var(--grid-gap-size));
+  top: calc(6 * var(--tile-border-width) + 3 * var(--tile-size) + 2 * var(--grid-gap-size));
+  z-index: 1;
+}
+
+.tile:nth-child(2):after {
+  content: '';
+  width: var(--grid-gap-size);
+  height: var(--grid-gap-size);
+  background-color: var(--color-tone-1);
+  border-radius: 50%;
+  position: absolute;
+  left: calc(6 * var(--tile-border-width) + 3 * var(--tile-size) + 2 * var(--grid-gap-size));
+  top: calc(12 * var(--tile-border-width) + 6 * var(--tile-size) + 5 * var(--grid-gap-size));
+  z-index: 1;
+}
+
+.tile:nth-child(3):after {
+  content: '';
+  height: 100%;
+  width: var(--grid-gap-size);
+  height: var(--grid-gap-size);
+  background-color: var(--color-tone-1);
+  border-radius: 50%;
+  position: absolute;
+  left: calc(12 * var(--tile-border-width) + 6 * var(--tile-size) + 5 * var(--grid-gap-size));
+  top: calc(6 * var(--tile-border-width) + 3 * var(--tile-size) + 2 * var(--grid-gap-size));
+  z-index: 1;
+}
+
+.tile:nth-child(4):after {
+  content: '';
+  width: var(--grid-gap-size);
+  height: var(--grid-gap-size);
+  background-color: var(--color-tone-1);
+  border-radius: 50%;
+  position: absolute;
+  left: calc(12 * var(--tile-border-width) + 6 * var(--tile-size) + 5 * var(--grid-gap-size));
+  top: calc(12 * var(--tile-border-width) + 6 * var(--tile-size) + 5 * var(--grid-gap-size));
+  z-index: 1;
+} */
+
+
+.tile.hint {
+  font-size: 1rem;
+  font-weight: normal;
+  color: var(--color-tone-2);
+
+  opacity: 0.0;
+  animation: Appear .4s normal forwards;
+  animation-delay: .5s;
+  animation-iteration-count: 1;
+}
+
+.tile.puzzle {
+  color: var(--blue) !important;
+}
+
+.tile.selected {
+  border-color: var(--color-tone-1);
+  background-color: var(--color-tone-3);
+}
+
+.tile.related {
+  border-color: var(--color-tone-2);
+  background-color: var(--color-tone-4);
+}
+
+.tile.tbd {
+  animation: Bounce .2s normal forwards;
+  animation-iteration-count: 1;
+
+  border-color: var(--gray);
+}
+
+.tile.absent {
+  background-color: var(--gray);
+  border-color: var(--gray);
+}
+
+.tile.present {
+  background-color: var(--yellow);
+  border-color: var(--yellow);
+}
+
+.tile.correct {
+  background-color: var(--green);
+  border-color: var(--green);
+}
+
+#keyboard {
+  position: absolute;
+  bottom: 10px;
+
+  left: 0;
+  right: 0;
+  margin: auto;
+  width: 485px;
+}
+
+.key-row {
+  display: flex;
+  margin: 0 auto 5px;
+  touch-action: manipulation;
+  grid-gap: 5px;
+
+  align-items: center;
+  justify-content: center;
+}
+
+.pull-right {
+  justify-content: right;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.appear {
+  animation: Appear .4s normal forwards;
+  animation-delay: .5s;
+  animation-iteration-count: 1;
+  opacity: 0;
+}
+
+@keyframes Appear {
+  from {
+      opacity: 0.0;
+  }
+
+  to {
+      opacity: 1.0;
+  }
+}
+
+.disappear {
+  animation: Disappear .4s normal forwards;
+  animation-iteration-count: 1;
+  opacity: 1.0;
+}
+
+@keyframes Disappear {
+  from {
+      opacity: 1.0;
+  }
+
+  to {
+      opacity: 0.0;
+  }
+}
+
+.tile.tbd {
+  animation-name: PopIn;
+  animation-duration: 100ms;
+}
+
+@keyframes PopIn {
+  from {
+      transform: scale(0.8);
+      opacity: 0;
+  }
+
+  40% {
+      transform: scale(1.1);
+      opacity: 1;
+  }
+}
+
+.key {
+  width: 40px;
+  height: 50px;
+  border-radius: 4px;
+
+  display: flex;
+
+  cursor: pointer;
+  user-select: none;
+
+  justify-content: center;
+  align-items: center;
+
+  font-size: 1rem;
+  line-height: 50px;
+  font-weight: normal;
+  color: var(--tile-text-color);
+  text-transform: uppercase;
+
+  background-color: var(--color-tone-4);
+  border: solid 2px var(--color-tone-4);
+}
+
+.key:active {
+  opacity: .8;
+  transform: scale(.9);
+}
+
+.key.absent {
+  background-color: var(--gray);
+  border: solid 2px var(--gray);
+}
+
+.key.present {
+  background-color: var(--yellow);
+  border: solid 2px var(--yellow);
+}
+
+.key.correct {
+  background-color: var(--green);
+  border: solid 2px var(--green);
+}
+
+.option-key {
+  width: 60px;
+}
+
+.half-key {
+  height: 25px;
+  line-height: 25px;
+}
+
+.github-link:hover {
+  opacity: 100%;
+  transform: rotate(10deg);
+}
+
+.label {
+  color: var(--color-tone-3);
+  letter-spacing: .04rem;
+}
+
+@media only screen and (max-device-width: 500px) {
+  #keyboard {
+      width: 373px;
+  }
+
+  .key-row {
+      margin: 0 auto 2px;
+      grid-gap: 2px;
+  }
+
+  .key {
+      width: 32px;
+      height: 40px;
+      line-height: 24px;
+  }
+
+  .option-key {
+      width: 48px;
+  }
+
+  .half-key {
+      height: 24px;
+      line-height: 24px;
+  }
+}

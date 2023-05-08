@@ -1,1 +1,1 @@
-An absolute bare-bones web app.
+Sudoku Puzzle Helper

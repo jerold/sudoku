@@ -1,1 +1,1 @@
-{"p":["sudoku","lib/sudoku.dart"],"s":[["sudoku","lib/src/controller.dart"],["sudoku","lib/src/game.dart"],["sudoku","lib/src/input.dart"],["sudoku","lib/src/renderer.dart"],["sudoku","lib/src/util.dart"],["sudoku","lib/sudoku.dart"]],"d":[],"m":false,"is":true,"pf":"ddc"}
+{"p":["sudoku","lib/sudoku.dart"],"s":[["sudoku","lib/src/controller.dart"],["sudoku","lib/src/game.dart"],["sudoku","lib/src/input.dart"],["sudoku","lib/src/puzzles.dart"],["sudoku","lib/src/renderer.dart"],["sudoku","lib/src/util.dart"],["sudoku","lib/sudoku.dart"]],"d":[],"m":false,"is":true,"pf":"ddc"}
