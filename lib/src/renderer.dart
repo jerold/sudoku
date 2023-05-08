@@ -36,13 +36,21 @@ class Renderer {
     } else if (_game.mode == EntryMode.puzzle) {
       return '';
     } else {
+      final findings = _game.found(c, r);
       var candidateHtml = '';
       for (final value in possibleValues) {
         final contents = candidates.contains(value) ? '$value' : '';
-        candidateHtml += '<div>$contents</div>';
+        candidateHtml += '<div class="${_candidateClassName(value, findings)}">$contents</div>';
       }
       return candidateHtml;
     }
+  }
+
+  String _candidateClassName(int value, Map<int, Finding> findings) {
+    if (findings.containsKey(value)) {
+      return findings[value]!.className;
+    }
+    return '';
   }
 
   String _cellClassName(int c, int r, int? value) {
@@ -52,7 +60,11 @@ class Renderer {
     } else if (c == _game.column || r == _game.row || _game.cube == getCube(c, r)) {
       classes.add('related');
     }
-    if (value == null) classes.add('candidates');
+    if (value == null) {
+      classes.add('candidates');
+    } else if (_game.setByPuzzle(c, r)) {
+      classes.add('puzzle');
+    }
     return classes.join(' ');
   }
 }

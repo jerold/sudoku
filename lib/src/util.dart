@@ -21,6 +21,15 @@ enum Finding {
   lastStanding, // this is the only remaining place for a value in its row/column/cube
 }
 
+extension FindingX on Finding {
+  String get className {
+    switch (this) {
+      case Finding.lastStanding:
+        return 'last-standing';
+    }
+  }
+}
+
 extension MoveX on Move {
   int nextColumn(int? column) {
     switch (this) {
@@ -59,15 +68,22 @@ Set<int> _allNine() => possibleValues.toSet();
 List<List<Set<int>>> fullCandidates() => List.generate(9, (_) => List.generate(9, (__) => _allNine()));
 List<List<Set<int>>> emptyCandidates() => List.generate(9, (_) => List.generate(9, (__) => {}));
 
+extension Griderate<T> on List<List<T>> {
+  // iterate over all columns and rows in the 2D array
+  void scan(Function(int column, int row) iterator) {
+    for (int c = 0; c < length; c++) {
+      for (int r = 0; r < this[c].length; r++) {
+        iterator(c, r);
+      }
+    }
+  }
+}
+
 extension PuzzleX on List<List<int?>> {
   // assume no intersections (if there are puzzle's value is trusted)
   List<List<int?>> copy({List<List<int?>>? withMerge}) {
     final puzzle = emptyPuzzle();
-    for (int c = 0; c < 9; c++) {
-      for (int r = 0; r < 9; r++) {
-        puzzle[c][r] = this[c][r] ?? withMerge?[c][r];
-      }
-    }
+    puzzle.scan((c, r) => puzzle[c][r] = this[c][r] ?? withMerge?[c][r]);
     return puzzle;
   }
 
@@ -84,21 +100,15 @@ extension CandidateX on List<List<Set<int>>> {
   List<List<Set<int>>> copy({List<List<Set<int>>>? withMerge}) {
     final candidates = emptyCandidates();
     if (withMerge != null) {
-      for (int c = 0; c < 9; c++) {
-        for (int r = 0; r < 9; r++) {
-          for (final value in possibleValues) {
-            if (this[c][r].contains(value) && withMerge[c][r].contains(value)) {
-              candidates[c][r].add(value);
-            }
+      scan((c, r) {
+        for (final value in possibleValues) {
+          if (this[c][r].contains(value) && withMerge[c][r].contains(value)) {
+            candidates[c][r].add(value);
           }
         }
-      }
+      });
     } else {
-      for (int c = 0; c < 9; c++) {
-        for (int r = 0; r < 9; r++) {
-          candidates[c][r] = this[c][r].toSet();
-        }
-      }
+      scan((c, r) => candidates[c][r] = this[c][r].toSet());
     }
     return candidates;
   }
@@ -117,58 +127,127 @@ extension CandidateX on List<List<Set<int>>> {
 // remove value from candidates within associated row/column/cube
 List<List<Set<int>>> considering(List<List<int?>> values) {
   final candidates = fullCandidates();
-  for (int c = 0; c < 9; c++) {
-    for (int r = 0; r < 9; r++) {
-      if (values[c][r] != null) {
-        final value = values[c][r]!;
-        for (int vc = 0; vc < 9; vc++) {
-          for (int vr = 0; vr < 9; vr++) {
-            if (vc == c || vr == r || getCube(vc, vr) == getCube(c, r)) {
-              candidates[vc][vr].remove(value);
-            }
-          }
+  values.scan((c, r) {
+    if (values[c][r] != null) {
+      final value = values[c][r]!;
+      candidates.scan((column, row) {
+        if (column == c || row == r || getCube(column, row) == getCube(c, r)) {
+          candidates[column][row].remove(value);
         }
-      }
+      });
     }
-  }
+  });
   return candidates;
 }
 
 // [column][row][candidate] = Finding
-Map<int, Map<int, Finding>> annotate(List<List<int?>> values, List<List<Set<int>>> candidates) {
-  final annotations = <int, Map<int, Finding>>{};
-  final checked = emptyCandidates();
-  for (int c = 0; c < 9; c++) {
-    for (int r = 0; r < 9; r++) {
-      for (int i = 0; i < 9; i++) {
-        if (candidates[c][r].contains(i) && !checked[c][r].contains(i)) {
-          checked[c][r].add(i);
-          final options = _allNine();
+Map<int, Map<int, Map<int, Finding>>> find(List<List<int?>> values, List<List<Set<int>>> candidates) {
+  final annotations = <int, Map<int, Map<int, Finding>>>{};
+
+  candidates.scan((c, r) {
+    if (values[c][r] != null) return;
+
+    if (candidates[c][r].length == 1) {
+      final lastStandingValue = candidates[c][r].first;
+      annotations.putIfAbsent(c, () => <int, Map<int, Finding>>{});
+      annotations[c]!.putIfAbsent(r, () => <int, Finding>{});
+      annotations[c]![r]![lastStandingValue] = Finding.lastStanding;
+      print('Finding.lastStanding(c:$c, r:$r, v:$lastStandingValue)');
+    } else {
+      var remainingOptions = _allNine();
+      var foundLastStandingValue = false;
+
+      if (!foundLastStandingValue) {
+        iterateColumn(c, r, (column, row) {
+          final value = values[column][row];
+          if (c != column || r != row) {
+            if (value != null) {
+              remainingOptions.remove(value);
+            } else {
+              remainingOptions.removeAll(candidates[column][row]);
+            }
+          }
+        });
+        if (remainingOptions.length == 1) {
+          final lastStandingValue = remainingOptions.first;
+          annotations.putIfAbsent(c, () => <int, Map<int, Finding>>{});
+          annotations[c]!.putIfAbsent(r, () => <int, Finding>{});
+          annotations[c]![r]![lastStandingValue] = Finding.lastStanding;
+          print('Column Finding.lastStanding(c:$c, r:$r, v:$lastStandingValue)');
+          foundLastStandingValue = true;
+        }
+      }
+
+      if (!foundLastStandingValue) {
+        remainingOptions = _allNine();
+        iterateRow(c, r, (column, row) {
+          final value = values[column][row];
+          if (c != column || r != row) {
+            if (value != null) {
+              remainingOptions.remove(value);
+            } else {
+              remainingOptions.removeAll(candidates[column][row]);
+            }
+          }
+        });
+        if (remainingOptions.length == 1) {
+          final lastStandingValue = remainingOptions.first;
+          annotations.putIfAbsent(c, () => <int, Map<int, Finding>>{});
+          annotations[c]!.putIfAbsent(r, () => <int, Finding>{});
+          annotations[c]![r]![lastStandingValue] = Finding.lastStanding;
+          print('Row Finding.lastStanding(c:$c, r:$r, v:$lastStandingValue)');
+          foundLastStandingValue = true;
+        }
+      }
+
+      if (!foundLastStandingValue) {
+        remainingOptions = _allNine();
+        iterateCube(c, r, (column, row) {
+          final value = values[column][row];
+          if (c != column || r != row) {
+            if (value != null) {
+              remainingOptions.remove(value);
+            } else {
+              remainingOptions.removeAll(candidates[column][row]);
+            }
+          }
+        });
+        if (remainingOptions.length == 1) {
+          final lastStandingValue = remainingOptions.first;
+          annotations.putIfAbsent(c, () => <int, Map<int, Finding>>{});
+          annotations[c]!.putIfAbsent(r, () => <int, Finding>{});
+          annotations[c]![r]![lastStandingValue] = Finding.lastStanding;
+          print('Cube Finding.lastStanding(c:$c, r:$r, v:$lastStandingValue)');
+          foundLastStandingValue = true;
         }
       }
     }
-  }
+  });
+
+  print(annotations);
   return annotations;
 }
 
-void iterateRow(int column, int row, Function(int c, int r) iterator) {
-  for (int r = 0; r < 9; r++) {
-    iterator(column, (row + r) % 9);
-  }
-}
-
-void iterateColumn(int column, int row, Function(int c, int r) iterator) {
+void iterateColumn(int column, int row, Function(int, int) iterator) {
   for (int c = 0; c < 9; c++) {
     iterator((column + c) % 9, row);
   }
 }
 
-void iterateCube(int column, int row, Function(int c, int r) iterator) {
+void iterateRow(int column, int row, Function(int, int) iterator) {
+  for (int r = 0; r < 9; r++) {
+    iterator(column, (row + r) % 9);
+  }
+}
+
+const _cube = [
+  [null, null, null],
+  [null, null, null],
+  [null, null, null],
+];
+
+void iterateCube(int column, int row, Function(int, int) iterator) {
   final ic = column ~/ 3;
   final ir = row ~/ 3;
-  for (int c = 0; c < 3; c++) {
-    for (int r = 0; r < 3; r++) {
-      iterator(ic + c, ir + r);
-    }
-  }
+  _cube.scan((c, r) => iterator(ic * 3 + c, ir * 3 + r));
 }

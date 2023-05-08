@@ -98,6 +98,10 @@ body {
   color: var(--darkGray) !important;
 }
 
+.last-standing {
+  color: var(--orange) !important;
+}
+
 .tile {
   width: var(--tile-size);
   height: var(--tile-size);
@@ -217,6 +221,10 @@ body {
   animation: Appear .4s normal forwards;
   animation-delay: .5s;
   animation-iteration-count: 1;
+}
+
+.tile.puzzle {
+  color: var(--blue) !important;
 }
 
 .tile.selected {
