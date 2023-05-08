@@ -53,6 +53,7 @@ var baseUrl = (function () {
 
 let modulePaths = {
  "dart_sdk": "packages/build_web_compilers/src/dev_compiler/dart_sdk.sound",
+ "packages/sudoku/sudoku": "packages/sudoku/sudoku.sound.ddc",
  "web/main": "main.sound.ddc"
 };
 if(!window.$dartLoader) {

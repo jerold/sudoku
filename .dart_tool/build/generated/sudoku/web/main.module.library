@@ -1,1 +1,1 @@
-{"isEntrypoint":true,"deps":[],"parts":[],"conditionalDeps":[],"sdkDeps":["html"],"hasMain":true}
+{"isEntrypoint":true,"deps":["sudoku|lib/sudoku.dart"],"parts":[],"conditionalDeps":[],"sdkDeps":[],"hasMain":true}

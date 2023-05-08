@@ -1,5 +1,7 @@
-import 'dart:html';
+import 'package:sudoku/sudoku.dart';
 
 void main() {
-  querySelector('#output')?.text = 'Your Dart app is running.';
+  final controller = Controller();
+  final game = Game(controller: controller);
+  Renderer(game: game);
 }
