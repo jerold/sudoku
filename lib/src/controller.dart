@@ -74,14 +74,12 @@ class Controller {
         e.stopPropagation();
         e.preventDefault();
         _inputController.add(Input.cursor(column: c, row: r));
-        print('_onClickTile(c:$c, r:$r)');
       };
 
   _onClickKey(int value) => (MouseEvent e) {
         e.stopPropagation();
         e.preventDefault();
         _inputController.add(Input.toggle(value: value));
-        print('_onClickKey(v:$value)');
       };
 
   _onClickBody(MouseEvent e) {

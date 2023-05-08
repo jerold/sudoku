@@ -30,11 +30,16 @@ class Renderer {
     }
   }
 
-  String _cellInnerHtml(int c, int r, int? value, List<int?> candidates) {
+  String _cellInnerHtml(int c, int r, int? value, List<bool> candidates) {
     if (value != null) {
       return '$value';
     } else {
-      return candidates.map((c) => '<div>${c ?? ""}</div>').join();
+      var candidateHtml = '';
+      for (int c = 0; c < candidates.length; c++) {
+        final contents = candidates[c] ? "${c + 1}" : "";
+        candidateHtml += '<div>$contents</div>';
+      }
+      return candidateHtml;
     }
   }
 

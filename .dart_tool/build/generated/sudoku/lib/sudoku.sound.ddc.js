@@ -3,8 +3,8 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
   const core = dart_sdk.core;
   const async = dart_sdk.async;
   const html = dart_sdk.html;
-  const _interceptors = dart_sdk._interceptors;
   const _internal = dart_sdk._internal;
+  const _interceptors = dart_sdk._interceptors;
   const _js_helper = dart_sdk._js_helper;
   const dart = dart_sdk.dart;
   const dartx = dart_sdk.dartx;
@@ -16,14 +16,11 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
   var $keys = dartx.keys;
   var $keyCode = dartx.keyCode;
   var $containsKey = dartx.containsKey;
-  var $last = dartx.last;
   var $runtimeType = dartx.runtimeType;
-  var $clear = dartx.clear;
-  var $add = dartx.add;
   var $length = dartx.length;
   var $className = dartx.className;
   var $innerHtml = dartx.innerHtml;
-  var $map = dartx.map;
+  var $add = dartx.add;
   var $join = dartx.join;
   var $modulo = dartx['%'];
   var $truncate = dartx.truncate;
@@ -35,23 +32,23 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
     MouseEventTovoid: () => (T.MouseEventTovoid = dart.constFn(dart.fnType(dart.void, [html.MouseEvent])))(),
     MouseEventToNvoid: () => (T.MouseEventToNvoid = dart.constFn(dart.nullable(T.MouseEventTovoid())))(),
     MouseEventToNull: () => (T.MouseEventToNull = dart.constFn(dart.fnType(core.Null, [html.MouseEvent])))(),
+    JSArrayOfString: () => (T.JSArrayOfString = dart.constFn(_interceptors.JSArray$(core.String)))(),
     intN: () => (T.intN = dart.constFn(dart.nullable(core.int)))(),
+    intNToint: () => (T.intNToint = dart.constFn(dart.fnType(core.int, [T.intN()])))(),
     ListOfintN: () => (T.ListOfintN = dart.constFn(core.List$(T.intN())))(),
     ListOfListOfintN: () => (T.ListOfListOfintN = dart.constFn(core.List$(T.ListOfintN())))(),
-    JSArrayOfListOfListOfintN: () => (T.JSArrayOfListOfListOfintN = dart.constFn(_interceptors.JSArray$(T.ListOfListOfintN())))(),
-    ListOfListOfListOfintN: () => (T.ListOfListOfListOfintN = dart.constFn(core.List$(T.ListOfListOfintN())))(),
-    JSArrayOfListOfListOfListOfintN: () => (T.JSArrayOfListOfListOfListOfintN = dart.constFn(_interceptors.JSArray$(T.ListOfListOfListOfintN())))(),
-    intNToString: () => (T.intNToString = dart.constFn(dart.fnType(core.String, [T.intN()])))(),
-    JSArrayOfString: () => (T.JSArrayOfString = dart.constFn(_interceptors.JSArray$(core.String)))(),
-    intNToint: () => (T.intNToint = dart.constFn(dart.fnType(core.int, [T.intN()])))(),
-    intToint: () => (T.intToint = dart.constFn(dart.fnType(core.int, [core.int])))(),
     intToListOfintN: () => (T.intToListOfintN = dart.constFn(dart.fnType(T.ListOfintN(), [core.int])))(),
-    intToListOfListOfintN: () => (T.intToListOfListOfintN = dart.constFn(dart.fnType(T.ListOfListOfintN(), [core.int])))(),
+    ListOfbool: () => (T.ListOfbool = dart.constFn(core.List$(core.bool)))(),
+    intTobool: () => (T.intTobool = dart.constFn(dart.fnType(core.bool, [core.int])))(),
+    ListOfListOfbool: () => (T.ListOfListOfbool = dart.constFn(core.List$(T.ListOfbool())))(),
+    ListOfListOfListOfbool: () => (T.ListOfListOfListOfbool = dart.constFn(core.List$(T.ListOfListOfbool())))(),
+    intToListOfbool: () => (T.intToListOfbool = dart.constFn(dart.fnType(T.ListOfbool(), [core.int])))(),
+    intToListOfListOfbool: () => (T.intToListOfListOfbool = dart.constFn(dart.fnType(T.ListOfListOfbool(), [core.int])))(),
     ListNOfListOfintN: () => (T.ListNOfListOfintN = dart.constFn(dart.nullable(T.ListOfListOfintN())))(),
-    __ToListOfListOfintN: () => (T.__ToListOfListOfintN = dart.constFn(dart.fnType(T.ListOfListOfintN(), [], {withMask: T.ListNOfListOfintN()}, {})))(),
-    intAndintAndintNToToggleResult: () => (T.intAndintAndintNToToggleResult = dart.constFn(dart.fnType(sudoku.ToggleResult, [core.int, core.int, T.intN()])))(),
-    VoidToListOfListOfListOfintN: () => (T.VoidToListOfListOfListOfintN = dart.constFn(dart.fnType(T.ListOfListOfListOfintN(), [])))(),
-    intAndintAndintToToggleResult: () => (T.intAndintAndintToToggleResult = dart.constFn(dart.fnType(sudoku.ToggleResult, [core.int, core.int, core.int])))(),
+    __ToListOfListOfintN: () => (T.__ToListOfListOfintN = dart.constFn(dart.fnType(T.ListOfListOfintN(), [], {withMerge: T.ListNOfListOfintN()}, {})))(),
+    intAndintAndintNTovoid: () => (T.intAndintAndintNTovoid = dart.constFn(dart.fnType(dart.void, [core.int, core.int, T.intN()])))(),
+    ListNOfListOfListOfbool: () => (T.ListNOfListOfListOfbool = dart.constFn(dart.nullable(T.ListOfListOfListOfbool())))(),
+    __ToListOfListOfListOfbool: () => (T.__ToListOfListOfListOfbool = dart.constFn(dart.fnType(T.ListOfListOfListOfbool(), [], {withMerge: T.ListNOfListOfListOfbool()}, {})))(),
     IdentityMapOfint$Input: () => (T.IdentityMapOfint$Input = dart.constFn(_js_helper.IdentityMap$(core.int, sudoku.Input)))()
   };
   const CT = Object.create({
@@ -92,42 +89,32 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
     get C6() {
       return C[6] = dart.const({
         __proto__: sudoku.EntryMode.prototype,
-        [_Enum__name]: "value",
+        [_Enum__name]: "puzzle",
         [_Enum_index]: 0
       });
     },
     get C7() {
       return C[7] = dart.const({
         __proto__: sudoku.EntryMode.prototype,
-        [_Enum__name]: "candidate",
-        [_Enum_index]: 1
-      });
-    },
-    get C5() {
-      return C[5] = dart.constList([C[6] || CT.C6, C[7] || CT.C7], sudoku.EntryMode);
-    },
-    get C9() {
-      return C[9] = dart.const({
-        __proto__: sudoku.ToggleResult.prototype,
-        [_Enum__name]: "insert",
-        [_Enum_index]: 0
-      });
-    },
-    get C10() {
-      return C[10] = dart.const({
-        __proto__: sudoku.ToggleResult.prototype,
-        [_Enum__name]: "remove",
+        [_Enum__name]: "value",
         [_Enum_index]: 1
       });
     },
     get C8() {
-      return C[8] = dart.constList([C[9] || CT.C9, C[10] || CT.C10], sudoku.ToggleResult);
+      return C[8] = dart.const({
+        __proto__: sudoku.EntryMode.prototype,
+        [_Enum__name]: "candidate",
+        [_Enum_index]: 2
+      });
     },
-    get C11() {
-      return C[11] = dart.constMap(core.int, core.String, [1, "one", 2, "two", 3, "three", 4, "four", 5, "five", 6, "six", 7, "seven", 8, "eight", 9, "nine"]);
+    get C5() {
+      return C[5] = dart.constList([C[6] || CT.C6, C[7] || CT.C7, C[8] || CT.C8], sudoku.EntryMode);
+    },
+    get C9() {
+      return C[9] = dart.constMap(core.int, core.String, [1, "one", 2, "two", 3, "three", 4, "four", 5, "five", 6, "six", 7, "seven", 8, "eight", 9, "nine"]);
     }
   }, false);
-  var C = Array(12).fill(void 0);
+  var C = Array(10).fill(void 0);
   var I = ["package:sudoku/sudoku.dart"];
   var _inputController = dart.privateName(sudoku, "_inputController");
   var _onKeyDown = dart.privateName(sudoku, "_onKeyDown");
@@ -160,7 +147,6 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
         e.stopPropagation();
         e.preventDefault();
         this[_inputController].add(sudoku.Input.cursor({column: c, row: r}));
-        core.print("_onClickTile(c:" + dart.str(c) + ", r:" + dart.str(r) + ")");
       }, T.MouseEventToNull());
     }
     [_onClickKey](value) {
@@ -168,7 +154,6 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
         e.stopPropagation();
         e.preventDefault();
         this[_inputController].add(sudoku.Input.toggle({value: value}));
-        core.print("_onClickKey(v:" + dart.str(value) + ")");
       }, T.MouseEventToNull());
     }
     [_onClickBody](e) {
@@ -218,26 +203,48 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
     [_inputController]: dart.finalFieldType(async.StreamController$(sudoku.Input))
   }));
   var _redrawController = dart.privateName(sudoku, "_redrawController");
-  var _values = dart.privateName(sudoku, "_values");
-  var _candidates = dart.privateName(sudoku, "_candidates");
+  var __Game__autoCandidates = dart.privateName(sudoku, "_#Game#_autoCandidates");
+  var __Game__userCandidates = dart.privateName(sudoku, "_#Game#_userCandidates");
   var __Game__puzzle = dart.privateName(sudoku, "_#Game#_puzzle");
+  var __Game__values = dart.privateName(sudoku, "_#Game#_values");
   var __Game__mode = dart.privateName(sudoku, "_#Game#_mode");
   var _column = dart.privateName(sudoku, "_column");
   var _row = dart.privateName(sudoku, "_row");
   var _controller = dart.privateName(sudoku, "_controller");
   var _handleInput = dart.privateName(sudoku, "_handleInput");
   var _initPuzzle = dart.privateName(sudoku, "_initPuzzle");
+  var _autoCandidates = dart.privateName(sudoku, "_autoCandidates");
+  var _userCandidates = dart.privateName(sudoku, "_userCandidates");
   var _puzzle = dart.privateName(sudoku, "_puzzle");
+  var _values = dart.privateName(sudoku, "_values");
   var _mode = dart.privateName(sudoku, "_mode");
   var _redraw = dart.privateName(sudoku, "_redraw");
+  var _handleEntryMode = dart.privateName(sudoku, "_handleEntryMode");
   var _handleCursor = dart.privateName(sudoku, "_handleCursor");
   var _handleToggle = dart.privateName(sudoku, "_handleToggle");
+  var _updateAutoCandidates = dart.privateName(sudoku, "_updateAutoCandidates");
   sudoku.Game = class Game extends core.Object {
     get redraw() {
       return this[_redrawController].stream;
     }
+    get [_autoCandidates]() {
+      let t0;
+      t0 = this[__Game__autoCandidates];
+      return t0 == null ? dart.throw(new _internal.LateError.fieldNI("_autoCandidates")) : t0;
+    }
+    set [_autoCandidates](library$32package$58sudoku$47src$47game$46dart$58$58_autoCandidates$35param) {
+      this[__Game__autoCandidates] = library$32package$58sudoku$47src$47game$46dart$58$58_autoCandidates$35param;
+    }
+    get [_userCandidates]() {
+      let t0;
+      t0 = this[__Game__userCandidates];
+      return t0 == null ? dart.throw(new _internal.LateError.fieldNI("_userCandidates")) : t0;
+    }
+    set [_userCandidates](library$32package$58sudoku$47src$47game$46dart$58$58_userCandidates$35param) {
+      this[__Game__userCandidates] = library$32package$58sudoku$47src$47game$46dart$58$58_userCandidates$35param;
+    }
     get candidates() {
-      return this[_candidates][$last];
+      return sudoku['CandidateX|copy'](this[_autoCandidates], {withMerge: this[_userCandidates]});
     }
     get [_puzzle]() {
       let t0;
@@ -247,8 +254,16 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
     set [_puzzle](library$32package$58sudoku$47src$47game$46dart$58$58_puzzle$35param) {
       this[__Game__puzzle] = library$32package$58sudoku$47src$47game$46dart$58$58_puzzle$35param;
     }
+    get [_values]() {
+      let t0;
+      t0 = this[__Game__values];
+      return t0 == null ? dart.throw(new _internal.LateError.fieldNI("_values")) : t0;
+    }
+    set [_values](library$32package$58sudoku$47src$47game$46dart$58$58_values$35param) {
+      this[__Game__values] = library$32package$58sudoku$47src$47game$46dart$58$58_values$35param;
+    }
     get puzzle() {
-      return sudoku['PuzzleX|copy'](this[_puzzle], {withMask: this[_values][$last]});
+      return sudoku['PuzzleX|copy'](this[_puzzle], {withMerge: this[_values]});
     }
     get [_mode]() {
       let t0;
@@ -287,6 +302,11 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
             this[_initPuzzle]();
             break;
           }
+        case dart.wrapType(sudoku.EntryModeInput):
+          {
+            this[_handleEntryMode](sudoku.EntryModeInput.as(input));
+            break;
+          }
         case dart.wrapType(sudoku.CursorInput):
           {
             this[_handleCursor](sudoku.CursorInput.as(input));
@@ -298,28 +318,20 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
             break;
           }
       }
-      core.print("_handleInput(" + dart.str(input) + ")");
       this[_redraw]();
     }
     [_initPuzzle]() {
-      let t0, t0$;
       this[_column] = null;
       this[_row] = null;
-      this[_mode] = sudoku.EntryMode.value;
+      this[_mode] = sudoku.EntryMode.puzzle;
       this[_puzzle] = sudoku.emptyPuzzle();
-      t0 = this[_values];
-      (() => {
-        t0[$clear]();
-        t0[$add](sudoku.emptyPuzzle());
-        return t0;
-      })();
-      t0$ = this[_candidates];
-      (() => {
-        t0$[$clear]();
-        t0$[$add](sudoku.newPuzzleCandidates());
-        return t0$;
-      })();
+      this[_values] = sudoku.emptyPuzzle();
+      this[_autoCandidates] = sudoku.allCandidates();
+      this[_userCandidates] = sudoku.allCandidates();
       this[_redraw]();
+    }
+    [_handleEntryMode](entryModeInput) {
+      this[_mode] = entryModeInput.entryMode;
     }
     [_handleCursor](cursorInput) {
       if (cursorInput.move != null) {
@@ -331,23 +343,39 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
       }
     }
     [_handleToggle](toggleInput) {
-      let t0;
+      let t0, t0$, t0$0;
       if (this.hasCursor) {
-        if (this[_mode] === sudoku.EntryMode.value) {
-          this[_values][$add]((t0 = sudoku['PuzzleX|copy'](this[_values][$last]), (() => {
+        if (this[_mode] === sudoku.EntryMode.puzzle) {
+          this[_puzzle] = (t0 = sudoku['PuzzleX|copy'](this[_puzzle]), (() => {
             sudoku['PuzzleX|toggle'](t0, dart.nullCheck(this[_column]), dart.nullCheck(this[_row]), toggleInput.value);
             return t0;
-          })()));
+          })());
+          this[_updateAutoCandidates]();
+        } else if (this[_mode] === sudoku.EntryMode.value) {
+          this[_values] = (t0$ = sudoku['PuzzleX|copy'](this[_values]), (() => {
+            sudoku['PuzzleX|toggle'](t0$, dart.nullCheck(this[_column]), dart.nullCheck(this[_row]), toggleInput.value);
+            return t0$;
+          })());
+          this[_updateAutoCandidates]();
+        } else if (this[_mode] === sudoku.EntryMode.candidate) {
+          this[_userCandidates] = (t0$0 = sudoku['CandidateX|copy'](this[_userCandidates]), (() => {
+            sudoku['CandidateX|toggle'](t0$0, dart.nullCheck(this[_column]), dart.nullCheck(this[_row]), toggleInput.value);
+            return t0$0;
+          })());
         }
       }
+    }
+    [_updateAutoCandidates]() {
+      this[_autoCandidates] = sudoku.considering(this.puzzle);
     }
   };
   (sudoku.Game.new = function(opts) {
     let controller = opts && 'controller' in opts ? opts.controller : null;
     this[_redrawController] = async.StreamController.broadcast();
-    this[_values] = T.JSArrayOfListOfListOfintN().of([]);
-    this[_candidates] = T.JSArrayOfListOfListOfListOfintN().of([]);
+    this[__Game__autoCandidates] = null;
+    this[__Game__userCandidates] = null;
     this[__Game__puzzle] = null;
+    this[__Game__values] = null;
     this[__Game__mode] = null;
     this[_column] = null;
     this[_row] = null;
@@ -362,14 +390,19 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
     [_redraw]: dart.fnType(dart.dynamic, []),
     [_handleInput]: dart.fnType(dart.void, [sudoku.Input]),
     [_initPuzzle]: dart.fnType(dart.void, []),
+    [_handleEntryMode]: dart.fnType(dart.void, [sudoku.EntryModeInput]),
     [_handleCursor]: dart.fnType(dart.void, [sudoku.CursorInput]),
-    [_handleToggle]: dart.fnType(dart.void, [sudoku.ToggleInput])
+    [_handleToggle]: dart.fnType(dart.void, [sudoku.ToggleInput]),
+    [_updateAutoCandidates]: dart.fnType(dart.void, [])
   }));
   dart.setGetterSignature(sudoku.Game, () => ({
     __proto__: dart.getGetters(sudoku.Game.__proto__),
     redraw: async.Stream,
-    candidates: core.List$(core.List$(core.List$(dart.nullable(core.int)))),
+    [_autoCandidates]: core.List$(core.List$(core.List$(core.bool))),
+    [_userCandidates]: core.List$(core.List$(core.List$(core.bool))),
+    candidates: core.List$(core.List$(core.List$(core.bool))),
     [_puzzle]: core.List$(core.List$(dart.nullable(core.int))),
+    [_values]: core.List$(core.List$(dart.nullable(core.int))),
     puzzle: core.List$(core.List$(dart.nullable(core.int))),
     [_mode]: sudoku.EntryMode,
     mode: sudoku.EntryMode,
@@ -380,7 +413,10 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
   }));
   dart.setSetterSignature(sudoku.Game, () => ({
     __proto__: dart.getSetters(sudoku.Game.__proto__),
+    [_autoCandidates]: core.List$(core.List$(core.List$(core.bool))),
+    [_userCandidates]: core.List$(core.List$(core.List$(core.bool))),
     [_puzzle]: core.List$(core.List$(dart.nullable(core.int))),
+    [_values]: core.List$(core.List$(dart.nullable(core.int))),
     [_mode]: sudoku.EntryMode
   }));
   dart.setLibraryUri(sudoku.Game, I[0]);
@@ -388,9 +424,10 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
     __proto__: dart.getFields(sudoku.Game.__proto__),
     [_redrawController]: dart.finalFieldType(async.StreamController),
     [_controller]: dart.finalFieldType(sudoku.Controller),
-    [_values]: dart.finalFieldType(core.List$(core.List$(core.List$(dart.nullable(core.int))))),
-    [_candidates]: dart.finalFieldType(core.List$(core.List$(core.List$(core.List$(dart.nullable(core.int)))))),
+    [__Game__autoCandidates]: dart.fieldType(dart.nullable(core.List$(core.List$(core.List$(core.bool))))),
+    [__Game__userCandidates]: dart.fieldType(dart.nullable(core.List$(core.List$(core.List$(core.bool))))),
     [__Game__puzzle]: dart.fieldType(dart.nullable(core.List$(core.List$(dart.nullable(core.int))))),
+    [__Game__values]: dart.fieldType(dart.nullable(core.List$(core.List$(dart.nullable(core.int))))),
     [__Game__mode]: dart.fieldType(dart.nullable(sudoku.EntryMode)),
     [_column]: dart.fieldType(dart.nullable(core.int)),
     [_row]: dart.fieldType(dart.nullable(core.int))
@@ -401,6 +438,12 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
     }
     static ['_#reset#tearOff']() {
       return sudoku.Input.reset();
+    }
+    static entryMode(mode) {
+      return new sudoku.EntryModeInput.new(mode);
+    }
+    static ['_#entryMode#tearOff'](mode) {
+      return sudoku.Input.entryMode(mode);
     }
     static cursor(opts) {
       let column = opts && 'column' in opts ? opts.column : null;
@@ -427,7 +470,7 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
   }).prototype = sudoku.Input.prototype;
   dart.addTypeTests(sudoku.Input);
   dart.addTypeCaches(sudoku.Input);
-  dart.setStaticMethodSignature(sudoku.Input, () => ['reset', 'cursor', 'toggle']);
+  dart.setStaticMethodSignature(sudoku.Input, () => ['reset', 'entryMode', 'cursor', 'toggle']);
   dart.setLibraryUri(sudoku.Input, I[0]);
   sudoku.ResetInput = class ResetInput extends core.Object {
     static ['_#new#tearOff']() {
@@ -441,6 +484,30 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
   dart.addTypeCaches(sudoku.ResetInput);
   sudoku.ResetInput[dart.implements] = () => [sudoku.Input];
   dart.setLibraryUri(sudoku.ResetInput, I[0]);
+  var entryMode$ = dart.privateName(sudoku, "EntryModeInput.entryMode");
+  sudoku.EntryModeInput = class EntryModeInput extends core.Object {
+    get entryMode() {
+      return this[entryMode$];
+    }
+    set entryMode(value) {
+      super.entryMode = value;
+    }
+    static ['_#new#tearOff'](entryMode) {
+      return new sudoku.EntryModeInput.new(entryMode);
+    }
+  };
+  (sudoku.EntryModeInput.new = function(entryMode) {
+    this[entryMode$] = entryMode;
+    ;
+  }).prototype = sudoku.EntryModeInput.prototype;
+  dart.addTypeTests(sudoku.EntryModeInput);
+  dart.addTypeCaches(sudoku.EntryModeInput);
+  sudoku.EntryModeInput[dart.implements] = () => [sudoku.Input];
+  dart.setLibraryUri(sudoku.EntryModeInput, I[0]);
+  dart.setFieldSignature(sudoku.EntryModeInput, () => ({
+    __proto__: dart.getFields(sudoku.EntryModeInput.__proto__),
+    entryMode: dart.finalFieldType(sudoku.EntryMode)
+  }));
   var column$ = dart.privateName(sudoku, "CursorInput.column");
   var row$ = dart.privateName(sudoku, "CursorInput.row");
   var move$ = dart.privateName(sudoku, "CursorInput.move");
@@ -507,18 +574,6 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
     __proto__: dart.getFields(sudoku.ToggleInput.__proto__),
     value: dart.finalFieldType(dart.nullable(core.int))
   }));
-  sudoku.ChangeModeInput = class ChangeModeInput extends core.Object {
-    static ['_#new#tearOff']() {
-      return new sudoku.ChangeModeInput.new();
-    }
-  };
-  (sudoku.ChangeModeInput.new = function() {
-    ;
-  }).prototype = sudoku.ChangeModeInput.prototype;
-  dart.addTypeTests(sudoku.ChangeModeInput);
-  dart.addTypeCaches(sudoku.ChangeModeInput);
-  sudoku.ChangeModeInput[dart.implements] = () => [sudoku.Input];
-  dart.setLibraryUri(sudoku.ChangeModeInput, I[0]);
   var _game = dart.privateName(sudoku, "_game");
   var _cellClassName = dart.privateName(sudoku, "_cellClassName");
   var _cellInnerHtml = dart.privateName(sudoku, "_cellInnerHtml");
@@ -556,10 +611,12 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
       if (value != null) {
         return dart.str(value);
       } else {
-        return candidates[$map](core.String, dart.fn(c => {
-          let t0;
-          return "<div>" + dart.str((t0 = c, t0 == null ? "" : t0)) + "</div>";
-        }, T.intNToString()))[$join]();
+        let candidateHtml = "";
+        for (let c = 0; c < candidates[$length]; c = c + 1) {
+          let contents = candidates[$_get](c) ? dart.str(c + 1) : "";
+          candidateHtml = candidateHtml + ("<div>" + contents + "</div>");
+        }
+        return candidateHtml;
       }
     }
     [_cellClassName](c, r, value) {
@@ -584,7 +641,7 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
   dart.setMethodSignature(sudoku.Renderer, () => ({
     __proto__: dart.getMethods(sudoku.Renderer.__proto__),
     paint: dart.fnType(dart.void, [], [dart.dynamic]),
-    [_cellInnerHtml]: dart.fnType(core.String, [core.int, core.int, dart.nullable(core.int), core.List$(dart.nullable(core.int))]),
+    [_cellInnerHtml]: dart.fnType(core.String, [core.int, core.int, dart.nullable(core.int), core.List$(core.bool)]),
     [_cellClassName]: dart.fnType(core.String, [core.int, core.int, dart.nullable(core.int)])
   }));
   dart.setGetterSignature(sudoku.Renderer, () => ({
@@ -642,42 +699,20 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
   dart.addTypeTests(sudoku.EntryMode);
   dart.addTypeCaches(sudoku.EntryMode);
   dart.setLibraryUri(sudoku.EntryMode, I[0]);
-  dart.setStaticFieldSignature(sudoku.EntryMode, () => ['values', 'value', 'candidate']);
+  dart.setStaticFieldSignature(sudoku.EntryMode, () => ['values', 'puzzle', 'value', 'candidate']);
   dart.defineExtensionMethods(sudoku.EntryMode, ['toString']);
   dart.defineLazy(sudoku.EntryMode, {
     /*sudoku.EntryMode.values*/get values() {
       return C[5] || CT.C5;
     },
-    /*sudoku.EntryMode.value*/get value() {
+    /*sudoku.EntryMode.puzzle*/get puzzle() {
       return C[6] || CT.C6;
     },
-    /*sudoku.EntryMode.candidate*/get candidate() {
+    /*sudoku.EntryMode.value*/get value() {
       return C[7] || CT.C7;
-    }
-  }, false);
-  sudoku.ToggleResult = class ToggleResult extends core._Enum {
-    toString() {
-      return "ToggleResult." + this[_name];
-    }
-  };
-  (sudoku.ToggleResult.new = function(index, name) {
-    sudoku.ToggleResult.__proto__.new.call(this, index, name);
-    ;
-  }).prototype = sudoku.ToggleResult.prototype;
-  dart.addTypeTests(sudoku.ToggleResult);
-  dart.addTypeCaches(sudoku.ToggleResult);
-  dart.setLibraryUri(sudoku.ToggleResult, I[0]);
-  dart.setStaticFieldSignature(sudoku.ToggleResult, () => ['values', 'insert', 'remove']);
-  dart.defineExtensionMethods(sudoku.ToggleResult, ['toString']);
-  dart.defineLazy(sudoku.ToggleResult, {
-    /*sudoku.ToggleResult.values*/get values() {
+    },
+    /*sudoku.EntryMode.candidate*/get candidate() {
       return C[8] || CT.C8;
-    },
-    /*sudoku.ToggleResult.insert*/get insert() {
-      return C[9] || CT.C9;
-    },
-    /*sudoku.ToggleResult.remove*/get remove() {
-      return C[10] || CT.C10;
     }
   }, false);
   sudoku['MoveX|nextColumn'] = function MoveX$124nextColumn($this, column) {
@@ -738,68 +773,95 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
   sudoku._emptyNine = function _emptyNine() {
     return T.ListOfintN().filled(9, null);
   };
-  sudoku._allNine = function _allNine() {
-    return T.ListOfintN().generate(9, dart.fn(index => index + 1, T.intToint()));
-  };
   sudoku.emptyPuzzle = function emptyPuzzle() {
     return T.ListOfListOfintN().generate(9, dart.fn(_ => sudoku._emptyNine(), T.intToListOfintN()));
   };
-  sudoku.emptyCandidates = function emptyCandidates() {
-    return T.ListOfListOfListOfintN().generate(9, dart.fn(_ => T.ListOfListOfintN().generate(9, dart.fn(__ => sudoku._emptyNine(), T.intToListOfintN())), T.intToListOfListOfintN()));
+  sudoku._allNine = function _allNine(set) {
+    return T.ListOfbool().generate(9, dart.fn(_ => set, T.intTobool()));
   };
-  sudoku.newPuzzleCandidates = function newPuzzleCandidates() {
-    return T.ListOfListOfListOfintN().generate(9, dart.fn(_ => T.ListOfListOfintN().generate(9, dart.fn(__ => sudoku._allNine(), T.intToListOfintN())), T.intToListOfListOfintN()));
+  sudoku.allCandidates = function allCandidates() {
+    return T.ListOfListOfListOfbool().generate(9, dart.fn(_ => T.ListOfListOfbool().generate(9, dart.fn(__ => sudoku._allNine(true), T.intToListOfbool())), T.intToListOfListOfbool()));
+  };
+  sudoku.noneCandidates = function noneCandidates() {
+    return T.ListOfListOfListOfbool().generate(9, dart.fn(_ => T.ListOfListOfbool().generate(9, dart.fn(__ => sudoku._allNine(false), T.intToListOfbool())), T.intToListOfListOfbool()));
   };
   sudoku['PuzzleX|copy'] = function PuzzleX$124copy($this, opts) {
-    let t5, t5$;
-    let withMask = opts && 'withMask' in opts ? opts.withMask : null;
+    let t6, t5;
+    let withMerge = opts && 'withMerge' in opts ? opts.withMerge : null;
     let puzzle = sudoku.emptyPuzzle();
     for (let c = 0; c < 9; c = c + 1) {
       for (let r = 0; r < 9; r = r + 1) {
-        puzzle[$_get](c)[$_set](r, (t5$ = (t5 = withMask, t5 == null ? null : t5[$_get](c)[$_get](r)), t5$ == null ? $this[$_get](c)[$_get](r) : t5$));
+        puzzle[$_get](c)[$_set](r, (t5 = $this[$_get](c)[$_get](r), t5 == null ? (t6 = withMerge, t6 == null ? null : t6[$_get](c)[$_get](r)) : t5));
       }
     }
     return puzzle;
   };
   sudoku['PuzzleX|get#copy'] = function PuzzleX$124get$35copy($this) {
     return dart.fn(opts => {
-      let withMask = opts && 'withMask' in opts ? opts.withMask : null;
-      return sudoku['PuzzleX|copy']($this, {withMask: withMask});
+      let withMerge = opts && 'withMerge' in opts ? opts.withMerge : null;
+      return sudoku['PuzzleX|copy']($this, {withMerge: withMerge});
     }, T.__ToListOfListOfintN());
   };
   sudoku['PuzzleX|toggle'] = function PuzzleX$124toggle($this, column, row, value) {
     if ($this[$_get](column)[$_get](row) == value) {
       $this[$_get](column)[$_set](row, null);
-      return sudoku.ToggleResult.remove;
+      return;
     }
     $this[$_get](column)[$_set](row, value);
-    return sudoku.ToggleResult.insert;
   };
   sudoku['PuzzleX|get#toggle'] = function PuzzleX$124get$35toggle($this) {
-    return dart.fn((column, row, value) => sudoku['PuzzleX|toggle']($this, column, row, value), T.intAndintAndintNToToggleResult());
+    return dart.fn((column, row, value) => sudoku['PuzzleX|toggle']($this, column, row, value), T.intAndintAndintNTovoid());
   };
-  sudoku['CandidateX|copy'] = function CandidateX$124copy($this) {
-    let puzzle = sudoku.emptyCandidates();
-    for (let c = 0; c < 9; c = c + 1) {
-      for (let r = 0; r < 9; r = r + 1) {
-        puzzle[$_get](c)[$_set](r, $this[$_get](c)[$_get](r)[$toList]());
+  sudoku['CandidateX|copy'] = function CandidateX$124copy($this, opts) {
+    let withMerge = opts && 'withMerge' in opts ? opts.withMerge : null;
+    let candidates = sudoku.allCandidates();
+    if (withMerge != null) {
+      for (let c = 0; c < 9; c = c + 1) {
+        for (let r = 0; r < 9; r = r + 1) {
+          for (let i = 0; i < 9; i = i + 1) {
+            candidates[$_get](c)[$_get](r)[$_set](i, $this[$_get](c)[$_get](r)[$_get](i) && withMerge[$_get](c)[$_get](r)[$_get](i));
+          }
+        }
+      }
+    } else {
+      for (let c = 0; c < 9; c = c + 1) {
+        for (let r = 0; r < 9; r = r + 1) {
+          candidates[$_get](c)[$_set](r, $this[$_get](c)[$_get](r)[$toList]());
+        }
       }
     }
-    return puzzle;
+    return candidates;
   };
   sudoku['CandidateX|get#copy'] = function CandidateX$124get$35copy($this) {
-    return dart.fn(() => sudoku['CandidateX|copy']($this), T.VoidToListOfListOfListOfintN());
+    return dart.fn(opts => {
+      let withMerge = opts && 'withMerge' in opts ? opts.withMerge : null;
+      return sudoku['CandidateX|copy']($this, {withMerge: withMerge});
+    }, T.__ToListOfListOfListOfbool());
   };
   sudoku['CandidateX|toggle'] = function CandidateX$124toggle($this, column, row, value) {
-    if ($this[$_get](column)[$_get](row)[$_get](value - 1) === value) {
-      $this[$_get](column)[$_get](row)[$_set](value - 1, null);
-      return sudoku.ToggleResult.remove;
-    }
-    $this[$_get](column)[$_get](row)[$_set](value - 1, value);
-    return sudoku.ToggleResult.insert;
+    if (value == null) $this[$_get](column)[$_set](row, sudoku._allNine(true));
+    $this[$_get](column)[$_get](row)[$_set](dart.nullCheck(value) - 1, !$this[$_get](column)[$_get](row)[$_get](dart.notNull(value) - 1));
   };
   sudoku['CandidateX|get#toggle'] = function CandidateX$124get$35toggle($this) {
-    return dart.fn((column, row, value) => sudoku['CandidateX|toggle']($this, column, row, value), T.intAndintAndintToToggleResult());
+    return dart.fn((column, row, value) => sudoku['CandidateX|toggle']($this, column, row, value), T.intAndintAndintNTovoid());
+  };
+  sudoku.considering = function considering(values) {
+    let candidates = sudoku.allCandidates();
+    for (let c = 0; c < 9; c = c + 1) {
+      for (let r = 0; r < 9; r = r + 1) {
+        if (values[$_get](c)[$_get](r) != null) {
+          let value = dart.nullCheck(values[$_get](c)[$_get](r));
+          for (let vc = 0; vc < 9; vc = vc + 1) {
+            for (let vr = 0; vr < 9; vr = vr + 1) {
+              if (vc === c || vr === r || sudoku.getCube(vc, vr) == sudoku.getCube(c, r)) {
+                candidates[$_get](vc)[$_get](vr)[$_set](value - 1, false);
+              }
+            }
+          }
+        }
+      }
+    }
+    return candidates;
   };
   dart.defineLazy(sudoku, {
     /*sudoku.bindings*/get bindings() {
@@ -807,14 +869,14 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
     },
     set bindings(_) {},
     /*sudoku.keyIds*/get keyIds() {
-      return C[11] || CT.C11;
+      return C[9] || CT.C9;
     }
   }, false);
   dart.trackLibraries("packages/sudoku/sudoku", {
     "package:sudoku/sudoku.dart": sudoku
   }, {
     "package:sudoku/sudoku.dart": ["src/controller.dart", "src/game.dart", "src/input.dart", "src/renderer.dart", "src/util.dart"]
-  }, '{"version":3,"sourceRoot":"","sources":["src/controller.dart","src/game.dart","src/input.dart","src/renderer.dart","src/util.dart"],"names":[],"mappings":"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","file":"sudoku.sound.ddc.js"}');
+  }, '{"version":3,"sourceRoot":"","sources":["src/controller.dart","src/game.dart","src/input.dart","src/renderer.dart","src/util.dart"],"names":[],"mappings":"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","file":"sudoku.sound.ddc.js"}');
   // Exports:
   return {
     sudoku: sudoku

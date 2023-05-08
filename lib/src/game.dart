@@ -6,16 +6,15 @@ class Game {
 
   final Controller _controller;
 
-  // history of entered values (last is current)
-  final List<List<List<int?>>> _values = [];
+  // Used to combine auto calculated candidates with user disabled ones
+  late List<List<List<bool>>> _autoCandidates;
+  late List<List<List<bool>>> _userCandidates;
+  List<List<List<bool>>> get candidates => _autoCandidates.copy(withMerge: _userCandidates);
 
-  // history of available candidated (last is current)
-  final List<List<List<List<int?>>>> _candidates = [];
-  List<List<List<int?>>> get candidates => _candidates.last;
-
-  // original puzzle values
+  // original puzzle values merged with user selected ones
   late List<List<int?>> _puzzle;
-  List<List<int?>> get puzzle => _puzzle.copy(withMask: _values.last);
+  late List<List<int?>> _values;
+  List<List<int?>> get puzzle => _puzzle.copy(withMerge: _values);
 
   late EntryMode _mode = EntryMode.value;
   EntryMode get mode => _mode;
@@ -42,6 +41,9 @@ class Game {
       case ResetInput:
         _initPuzzle();
         break;
+      case EntryModeInput:
+        _handleEntryMode(input as EntryModeInput);
+        break;
       case CursorInput:
         _handleCursor(input as CursorInput);
         break;
@@ -49,22 +51,22 @@ class Game {
         _handleToggle(input as ToggleInput);
         break;
     }
-    print('_handleInput($input)');
     _redraw();
   }
 
   void _initPuzzle() {
     _column = null;
     _row = null;
-    _mode = EntryMode.value;
+    _mode = EntryMode.puzzle;
     _puzzle = emptyPuzzle();
-    _values
-      ..clear()
-      ..add(emptyPuzzle());
-    _candidates
-      ..clear()
-      ..add(newPuzzleCandidates());
+    _values = emptyPuzzle();
+    _autoCandidates = allCandidates();
+    _userCandidates = allCandidates();
     _redraw();
+  }
+
+  void _handleEntryMode(EntryModeInput entryModeInput) {
+    _mode = entryModeInput.entryMode;
   }
 
   void _handleCursor(CursorInput cursorInput) {
@@ -79,9 +81,19 @@ class Game {
 
   void _handleToggle(ToggleInput toggleInput) {
     if (hasCursor) {
-      if (_mode == EntryMode.value) {
-        _values.add(_values.last.copy()..toggle(_column!, _row!, toggleInput.value));
+      if (_mode == EntryMode.puzzle) {
+        _puzzle = _puzzle.copy()..toggle(_column!, _row!, toggleInput.value);
+        _updateAutoCandidates();
+      } else if (_mode == EntryMode.value) {
+        _values = _values.copy()..toggle(_column!, _row!, toggleInput.value);
+        _updateAutoCandidates();
+      } else if (_mode == EntryMode.candidate) {
+        _userCandidates = _userCandidates.copy()..toggle(_column!, _row!, toggleInput.value);
       }
     }
+  }
+
+  void _updateAutoCandidates() {
+    _autoCandidates = considering(puzzle);
   }
 }

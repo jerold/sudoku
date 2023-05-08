@@ -10,13 +10,9 @@ enum Move {
 
 // indicate wether value or candidate will be toggled
 enum EntryMode {
+  puzzle,
   value,
   candidate,
-}
-
-enum ToggleResult {
-  insert,
-  remove,
 }
 
 extension MoveX on Move {
@@ -50,50 +46,77 @@ extension MoveX on Move {
 int? getCube(int? column, int? row) => row != null && column != null ? row ~/ 3 + column ~/ 3 * 3 : null;
 
 List<int?> _emptyNine() => List.filled(9, null);
-List<int?> _allNine() => List.generate(9, (index) => index + 1);
-
 List<List<int?>> emptyPuzzle() => List.generate(9, (_) => _emptyNine());
-List<List<List<int?>>> emptyCandidates() => List.generate(9, (_) => List.generate(9, (__) => _emptyNine()));
-List<List<List<int?>>> newPuzzleCandidates() => List.generate(9, (_) => List.generate(9, (__) => _allNine()));
+
+List<bool> _allNine(bool set) => List.generate(9, (_) => set);
+List<List<List<bool>>> allCandidates() => List.generate(9, (_) => List.generate(9, (__) => _allNine(true)));
+List<List<List<bool>>> noneCandidates() => List.generate(9, (_) => List.generate(9, (__) => _allNine(false)));
 
 extension PuzzleX on List<List<int?>> {
-  List<List<int?>> copy({List<List<int?>>? withMask}) {
+  // assume no intersections (if there are puzzle's value is trusted)
+  List<List<int?>> copy({List<List<int?>>? withMerge}) {
     final puzzle = emptyPuzzle();
     for (int c = 0; c < 9; c++) {
       for (int r = 0; r < 9; r++) {
-        puzzle[c][r] = withMask?[c][r] ?? this[c][r];
+        puzzle[c][r] = this[c][r] ?? withMerge?[c][r];
       }
     }
     return puzzle;
   }
 
-  ToggleResult toggle(int column, int row, int? value) {
+  void toggle(int column, int row, int? value) {
     if (this[column][row] == value) {
       this[column][row] = null;
-      return ToggleResult.remove;
+      return;
     }
     this[column][row] = value;
-    return ToggleResult.insert;
   }
 }
 
-extension CandidateX on List<List<List<int?>>> {
-  List<List<List<int?>>> copy() {
-    final puzzle = emptyCandidates();
-    for (int c = 0; c < 9; c++) {
-      for (int r = 0; r < 9; r++) {
-        puzzle[c][r] = this[c][r].toList();
+extension CandidateX on List<List<List<bool>>> {
+  List<List<List<bool>>> copy({List<List<List<bool>>>? withMerge}) {
+    final candidates = allCandidates();
+    if (withMerge != null) {
+      for (int c = 0; c < 9; c++) {
+        for (int r = 0; r < 9; r++) {
+          for (int i = 0; i < 9; i++) {
+            candidates[c][r][i] = this[c][r][i] && withMerge[c][r][i];
+          }
+        }
+      }
+    } else {
+      for (int c = 0; c < 9; c++) {
+        for (int r = 0; r < 9; r++) {
+          candidates[c][r] = this[c][r].toList();
+        }
       }
     }
-    return puzzle;
+    return candidates;
   }
 
-  ToggleResult toggle(int column, int row, int value) {
-    if (this[column][row][value - 1] == value) {
-      this[column][row][value - 1] = null;
-      return ToggleResult.remove;
-    }
-    this[column][row][value - 1] = value;
-    return ToggleResult.insert;
+  // passing a null value will reset the candidates (in case user makes a mistake)
+  void toggle(int column, int row, int? value) {
+    if (value == null) this[column][row] = _allNine(true);
+    this[column][row][value! - 1] = !this[column][row][value - 1];
   }
+}
+
+// remove value from candidates within associated row/column/cube
+List<List<List<bool>>> considering(List<List<int?>> values) {
+  final candidates = allCandidates();
+  for (int c = 0; c < 9; c++) {
+    for (int r = 0; r < 9; r++) {
+      if (values[c][r] != null) {
+        final value = values[c][r]!;
+        for (int vc = 0; vc < 9; vc++) {
+          for (int vr = 0; vr < 9; vr++) {
+            if (vc == c || vr == r || getCube(vc, vr) == getCube(c, r)) {
+              candidates[vc][vr][value - 1] = false;
+            }
+          }
+        }
+      }
+    }
+  }
+  return candidates;
 }
