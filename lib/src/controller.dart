@@ -22,7 +22,10 @@ Map<int, Input> bindings = {
   55: Input.toggle(value: 7),
   56: Input.toggle(value: 8),
   57: Input.toggle(value: 9),
-  KeyCode.BACKSPACE: Input.toggle(value: null)
+  // delete value
+  KeyCode.BACKSPACE: Input.toggle(value: null),
+  // finish editing puzzle
+  KeyCode.ENTER: Input.entryMode(EntryMode.value),
 };
 
 const keyIds = {
@@ -48,6 +51,10 @@ class Controller {
     document.body?.onKeyDown.listen(_onKeyDown);
     document.body?.onClick.listen(_onClickBody);
 
+    // submit listener
+    querySelector('#submit')!.onClick.listen(_onClickSubmit);
+
+    // tile listeners
     var i = 0;
     final children = _boardElement.children;
     for (int c = 0; c < 9; c++) {
@@ -57,9 +64,9 @@ class Controller {
       }
     }
 
+    // keyboard listeners
     for (final value in keyIds.keys) {
-      final keyElement = _keyboardElement.querySelector('#${keyIds[value]!}')!;
-      keyElement.onClick.listen(_onClickKey(value));
+      _keyboardElement.querySelector('#${keyIds[value]!}')!.onClick.listen(_onClickKey(value));
     }
   }
 
@@ -68,6 +75,12 @@ class Controller {
     if (bindings.containsKey(keyCode)) {
       _inputController.add(bindings[keyCode]!);
     }
+  }
+
+  _onClickSubmit(MouseEvent e) {
+    e.stopPropagation();
+    e.preventDefault();
+    _inputController.add(Input.entryMode(EntryMode.value));
   }
 
   _onClickTile(int c, int r) => (MouseEvent e) {

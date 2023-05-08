@@ -7,14 +7,14 @@ class Game {
   final Controller _controller;
 
   // Used to combine auto calculated candidates with user disabled ones
-  late List<List<List<bool>>> _autoCandidates;
-  late List<List<List<bool>>> _userCandidates;
-  List<List<List<bool>>> get candidates => _autoCandidates.copy(withMerge: _userCandidates);
+  late List<List<Set<int>>> _autoCandidates;
+  late List<List<Set<int>>> _userCandidates;
+  List<List<Set<int>>> get candidates => _autoCandidates.copy(withMerge: _userCandidates);
 
   // original puzzle values merged with user selected ones
   late List<List<int?>> _puzzle;
-  late List<List<int?>> _values;
-  List<List<int?>> get puzzle => _puzzle.copy(withMerge: _values);
+  late List<List<int?>> _entries;
+  List<List<int?>> get values => _puzzle.copy(withMerge: _entries);
 
   late EntryMode _mode = EntryMode.value;
   EntryMode get mode => _mode;
@@ -59,9 +59,9 @@ class Game {
     _row = null;
     _mode = EntryMode.puzzle;
     _puzzle = emptyPuzzle();
-    _values = emptyPuzzle();
-    _autoCandidates = allCandidates();
-    _userCandidates = allCandidates();
+    _entries = emptyPuzzle();
+    _autoCandidates = fullCandidates();
+    _userCandidates = fullCandidates();
     _redraw();
   }
 
@@ -85,7 +85,7 @@ class Game {
         _puzzle = _puzzle.copy()..toggle(_column!, _row!, toggleInput.value);
         _updateAutoCandidates();
       } else if (_mode == EntryMode.value) {
-        _values = _values.copy()..toggle(_column!, _row!, toggleInput.value);
+        _entries = _entries.copy()..toggle(_column!, _row!, toggleInput.value);
         _updateAutoCandidates();
       } else if (_mode == EntryMode.candidate) {
         _userCandidates = _userCandidates.copy()..toggle(_column!, _row!, toggleInput.value);
@@ -94,6 +94,6 @@ class Game {
   }
 
   void _updateAutoCandidates() {
-    _autoCandidates = considering(puzzle);
+    _autoCandidates = considering(values);
   }
 }

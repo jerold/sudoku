@@ -80,12 +80,14 @@ body {
   left: 0;
   right: 0;
   margin: auto;
+  padding: 2px;
   width: calc(2 * var(--tile-border-width) * var(--column-count) + var(--tile-size) * var(--column-count) + var(--grid-gap-size) * (var(--column-count) - 1));
   height: calc(2 * var(--tile-border-width) * var(--column-count) + var(--tile-size) * var(--column-count) + var(--grid-gap-size) * (var(--column-count) - 1));
 
   display: grid;
   grid-template-columns: repeat(var(--column-count), 1fr);
   grid-gap: var(--grid-gap-size);
+  border: dashed 1px var(--color-tone-1);
 }
 
 .candidates {
@@ -121,7 +123,7 @@ body {
   border-bottom: dashed 1px var(--color-tone-1);
   position: absolute;
   left: 0;
-  top: calc(6 * var(--tile-border-width) + 3 * var(--tile-size) + 2 * var(--grid-gap-size) + 2px);
+  top: calc(6 * var(--tile-border-width) + 3 * var(--tile-size) + 2 * var(--grid-gap-size) + 4px);
   z-index: 1;
 }
 
@@ -131,7 +133,7 @@ body {
   border-bottom: dashed 1px var(--color-tone-1);
   position: absolute;
   left: 0;
-  top: calc(12 * var(--tile-border-width) + 6 * var(--tile-size) + 5 * var(--grid-gap-size) + 2px);
+  top: calc(12 * var(--tile-border-width) + 6 * var(--tile-size) + 5 * var(--grid-gap-size) + 4px);
   z-index: 1;
 }
 
@@ -141,7 +143,7 @@ body {
   border-left: dashed 1px var(--color-tone-1);
   position: absolute;
   top: 0;
-  left: calc(6 * var(--tile-border-width) + 3 * var(--tile-size) + 2 * var(--grid-gap-size) + 2px);
+  left: calc(6 * var(--tile-border-width) + 3 * var(--tile-size) + 2 * var(--grid-gap-size) + 4px);
   z-index: 1;
 }
 
@@ -151,7 +153,7 @@ body {
   border-left: dashed 1px var(--color-tone-1);
   position: absolute;
   top: 0;
-  left: calc(12 * var(--tile-border-width) + 6 * var(--tile-size) + 5 * var(--grid-gap-size) + 2px);
+  left: calc(12 * var(--tile-border-width) + 6 * var(--tile-size) + 5 * var(--grid-gap-size) + 4px);
   z-index: 1;
 }
 
@@ -218,13 +220,13 @@ body {
 }
 
 .tile.selected {
-  border-color: var(--color-tone-2);
-  background-color: var(--color-tone-4);
+  border-color: var(--color-tone-1);
+  background-color: var(--color-tone-3);
 }
 
 .tile.related {
-  border-color: var(--color-tone-3);
-  background-color: var(--color-tone-5);
+  border-color: var(--color-tone-2);
+  background-color: var(--color-tone-4);
 }
 
 .tile.tbd {
