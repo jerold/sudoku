@@ -57,8 +57,11 @@ class Renderer {
     var classes = <String>['tile'];
     if (c == _game.column && r == _game.row) {
       classes.add('selected');
-    } else if (c == _game.column || r == _game.row || _game.cube == getCube(c, r)) {
+    } else if (c == _game.column || r == _game.row || _game.box == getBox(c, r)) {
       classes.add('related');
+    }
+    if (!_game.isValid(c, r)) {
+      classes.add('invalid');
     }
     if (value == null) {
       classes.add('candidates');

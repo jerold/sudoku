@@ -22,6 +22,9 @@ class Game {
   late Map<int, Map<int, Map<int, Finding>>> _findings;
   Map<int, Finding> found(int column, int row) => _findings[column]?[row] ?? {};
 
+  late Map<int, Map<int, bool>> _invalid;
+  bool isValid(int column, int row) => !(_invalid.containsKey(column) && _invalid[column]!.containsKey(row));
+
   late EntryMode _mode = EntryMode.value;
   EntryMode get mode => _mode;
 
@@ -31,7 +34,7 @@ class Game {
   int? _row;
   int? get row => _row;
 
-  int? get cube => getCube(_column, _row);
+  int? get box => getBox(_column, _row);
 
   bool get hasCursor => _column != null && _row != null;
 
@@ -39,7 +42,7 @@ class Game {
     _controller.input.listen(_handleInput);
     _initPuzzle();
 
-    expertPuzzle.forEach(_handleInput);
+    evilPuzzle.forEach(_handleInput);
   }
 
   _redraw() => _redrawController.add(_puzzle);
@@ -73,6 +76,7 @@ class Game {
     _autoCandidates = fullCandidates();
     _userCandidates = [fullCandidates()];
     _history = [];
+    _invalid = {};
     _redraw();
   }
 
@@ -145,6 +149,7 @@ class Game {
 
   void _updateFoundValues({bool auto = true}) {
     _findings = findValues(values, candidates);
+    _invalid = validate(values);
 
     if (auto && _mode != EntryMode.puzzle && _findings.isNotEmpty) {
       final c = _findings.keys.first;
@@ -157,7 +162,7 @@ class Game {
   }
 
   Future _clearFoundCell(int c, int r, int? v) async {
-    await Future.delayed(Duration(milliseconds: 40));
+    await Future.delayed(Duration(milliseconds: 50));
     _toggleCell(c, r, v, EntryMode.value);
   }
 }

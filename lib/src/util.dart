@@ -58,8 +58,8 @@ extension MoveX on Move {
   }
 }
 
-// cube index used for quickly finding out if coordinates are in the same cube
-int? getCube(int? column, int? row) => row != null && column != null ? row ~/ 3 + column ~/ 3 * 3 : null;
+// Box index used for quickly finding out if coordinates are in the same Box
+int? getBox(int? column, int? row) => row != null && column != null ? row ~/ 3 + column ~/ 3 * 3 : null;
 
 List<int?> _emptyNine() => List.filled(9, null);
 List<List<int?>> emptyPuzzle() => List.generate(9, (_) => _emptyNine());
@@ -124,6 +124,36 @@ extension CandidateX on List<List<Set<int>>> {
   }
 }
 
+// find any values that conflict with
+Map<int, Map<int, bool>> validate(List<List<int?>> values) {
+  final invalid = <int, Map<int, bool>>{};
+  values.scan((c, r) {
+    final value = values[c][r];
+    if (value != null) {
+      var count = 1;
+      validateDimention(Iterator iterator) {
+        iterator(c, r, (column, row) {
+          if (c != column || r != row) {
+            if (value == values[column][row]) {
+              count++;
+            }
+          }
+        });
+      }
+
+      validateDimention(iterateColumn);
+      validateDimention(iterateRow);
+      validateDimention(iterateBox);
+
+      if (count > 1) {
+        invalid.putIfAbsent(c, () => <int, bool>{});
+        invalid[c]![r] = false;
+      }
+    }
+  });
+  return invalid;
+}
+
 // remove value from candidates within associated row/column/cube
 List<List<Set<int>>> findCandidates(List<List<int?>> values) {
   final candidates = fullCandidates();
@@ -131,7 +161,7 @@ List<List<Set<int>>> findCandidates(List<List<int?>> values) {
     if (values[c][r] != null) {
       final value = values[c][r]!;
       candidates.scan((column, row) {
-        if (column == c || row == r || getCube(column, row) == getCube(c, r)) {
+        if (column == c || row == r || getBox(column, row) == getBox(c, r)) {
           candidates[column][row].remove(value);
         }
       });
@@ -179,7 +209,7 @@ Map<int, Map<int, Map<int, Finding>>> findValues(List<List<int?>> values, List<L
 
       checkForLastStanding(iterateColumn);
       checkForLastStanding(iterateRow);
-      checkForLastStanding(iterateCube);
+      checkForLastStanding(iterateBox);
     }
   });
   return annotations;
@@ -200,14 +230,14 @@ void iterateRow(int column, int row, Function(int, int) iterator) {
   }
 }
 
-const _cube = [
+const _emptyBox = [
   [null, null, null],
   [null, null, null],
   [null, null, null],
 ];
 
-void iterateCube(int column, int row, Function(int, int) iterator) {
+void iterateBox(int column, int row, Function(int, int) iterator) {
   final ic = column ~/ 3;
   final ir = row ~/ 3;
-  _cube.scan((c, r) => iterator(ic * 3 + c, ir * 3 + r));
+  _emptyBox.scan((c, r) => iterator(ic * 3 + c, ir * 3 + r));
 }
