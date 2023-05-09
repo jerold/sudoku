@@ -8,14 +8,16 @@ class Game {
 
   // Used to combine auto calculated candidates with user disabled ones
   late List<List<Set<int>>> _autoCandidates;
-  late List<List<Set<int>>> _userCandidates;
-  List<List<Set<int>>> get candidates => _autoCandidates.copy(withMerge: _userCandidates);
+  late List<List<List<Set<int>>>> _userCandidates; // historical: last is current
+  List<List<Set<int>>> get candidates => _autoCandidates.copy(withMerge: _userCandidates.last);
 
   // original puzzle values merged with user selected ones
   late List<List<int?>> _puzzle;
-  late List<List<int?>> _entries;
-  List<List<int?>> get values => _puzzle.copy(withMerge: _entries);
+  late List<List<List<int?>>> _entries; // historical: last is current
+  List<List<int?>> get values => _puzzle.copy(withMerge: _entries.last);
   bool setByPuzzle(int column, int row) => _puzzle[column][row] != null;
+
+  List<EntryMode> _history = [];
 
   late Map<int, Map<int, Map<int, Finding>>> _findings;
   Map<int, Finding> found(int column, int row) => _findings[column]?[row] ?? {};
@@ -37,7 +39,7 @@ class Game {
     _controller.input.listen(_handleInput);
     _initPuzzle();
 
-    hardPuzzle.forEach(_handleInput);
+    expertPuzzle.forEach(_handleInput);
   }
 
   _redraw() => _redrawController.add(_puzzle);
@@ -46,6 +48,9 @@ class Game {
     switch (input.runtimeType) {
       case ResetInput:
         _initPuzzle();
+        break;
+      case RewindInput:
+        _handleRewind();
         break;
       case EntryModeInput:
         _handleEntryMode(input as EntryModeInput);
@@ -64,10 +69,24 @@ class Game {
     _row = null;
     _mode = EntryMode.puzzle;
     _puzzle = emptyPuzzle();
-    _entries = emptyPuzzle();
+    _entries = [emptyPuzzle()];
     _autoCandidates = fullCandidates();
-    _userCandidates = fullCandidates();
+    _userCandidates = [fullCandidates()];
+    _history = [];
     _redraw();
+  }
+
+  void _handleRewind() {
+    if (_history.isNotEmpty) {
+      if (_history.last == EntryMode.value) {
+        _entries.removeLast();
+      } else if (_history.last == EntryMode.candidate) {
+        _userCandidates.removeLast();
+      }
+      _history.removeLast();
+      _updateAutoCandidates();
+      _updateFoundValues(auto: false);
+    }
   }
 
   void _handleEntryMode(EntryModeInput entryModeInput) {
@@ -84,6 +103,7 @@ class Game {
     // }
 
     _mode = entryModeInput.entryMode;
+    _updateAutoCandidates();
     _updateFoundValues();
   }
 
@@ -109,10 +129,12 @@ class Game {
       _puzzle = _puzzle.copy()..toggle(column, row, value);
       _updateAutoCandidates();
     } else if (mode == EntryMode.value) {
-      _entries = _entries.copy()..toggle(column, row, value);
+      _entries.add(_entries.last.copy()..toggle(column, row, value));
+      _history.add(mode);
       _updateAutoCandidates();
     } else if (mode == EntryMode.candidate) {
-      _userCandidates = _userCandidates.copy()..toggle(column, row, value);
+      _userCandidates.add(_userCandidates.last.copy()..toggle(column, row, value));
+      _history.add(mode);
     }
     _updateFoundValues();
   }
@@ -121,10 +143,10 @@ class Game {
     _autoCandidates = findCandidates(values);
   }
 
-  void _updateFoundValues() {
+  void _updateFoundValues({bool auto = true}) {
     _findings = findValues(values, candidates);
 
-    if (_mode != EntryMode.puzzle && _findings.isNotEmpty) {
+    if (auto && _mode != EntryMode.puzzle && _findings.isNotEmpty) {
       final c = _findings.keys.first;
       final r = _findings[c]!.keys.first;
       final v = _findings[c]![r]!.keys.first;
@@ -135,7 +157,7 @@ class Game {
   }
 
   Future _clearFoundCell(int c, int r, int? v) async {
-    await Future.delayed(Duration(milliseconds: 100));
+    await Future.delayed(Duration(milliseconds: 40));
     _toggleCell(c, r, v, EntryMode.value);
   }
 }

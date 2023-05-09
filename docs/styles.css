@@ -389,6 +389,11 @@ body {
   line-height: 25px;
 }
 
+.key.long-key {
+  width: auto;
+  padding: 0 12px 0 12px;
+}
+
 .github-link:hover {
   opacity: 100%;
   transform: rotate(10deg);

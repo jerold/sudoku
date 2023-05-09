@@ -185,6 +185,7 @@ Map<int, Map<int, Map<int, Finding>>> findValues(List<List<int?>> values, List<L
   return annotations;
 }
 
+// where column row determine which dimensions to iterate
 typedef Iterator = Function(int column, int row, Function(int, int) iterator);
 
 void iterateColumn(int column, int row, Function(int, int) iterator) {

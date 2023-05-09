@@ -1,7 +1,12 @@
 part of sudoku;
 
 Map<int, Input> bindings = {
+  // reinitialize board
   KeyCode.ESC: Input.reset(),
+  // rewind value
+  KeyCode.BACKSPACE: Input.rewind(),
+  // finish editing puzzle
+  KeyCode.ENTER: Input.entryMode(EntryMode.value),
   // move cursor with arrow
   KeyCode.UP: Input.cursor(move: Move.up),
   KeyCode.DOWN: Input.cursor(move: Move.down),
@@ -22,10 +27,6 @@ Map<int, Input> bindings = {
   55: Input.toggle(value: 7),
   56: Input.toggle(value: 8),
   57: Input.toggle(value: 9),
-  // delete value
-  KeyCode.BACKSPACE: Input.toggle(value: null),
-  // finish editing puzzle
-  KeyCode.ENTER: Input.entryMode(EntryMode.value),
   // change to candidate editing
   67: Input.entryMode(EntryMode.candidate),
   86: Input.entryMode(EntryMode.value),
@@ -54,8 +55,10 @@ class Controller {
     document.body?.onKeyDown.listen(_onKeyDown);
     document.body?.onClick.listen(_onClickBody);
 
-    // submit listener
-    querySelector('#submit')!.onClick.listen(_onClickSubmit);
+    querySelector('#clear')!.onClick.listen((MouseEvent e) => _onInput(e, Input.reset()));
+    querySelector('#nominate')!.onClick.listen((MouseEvent e) => _onInput(e, Input.entryMode(EntryMode.value)));
+    querySelector('#candidate')!.onClick.listen((MouseEvent e) => _onInput(e, Input.entryMode(EntryMode.candidate)));
+    querySelector('#rewind')!.onClick.listen((MouseEvent e) => _onInput(e, Input.rewind()));
 
     // tile listeners
     var i = 0;
@@ -80,10 +83,10 @@ class Controller {
     }
   }
 
-  _onClickSubmit(MouseEvent e) {
+  _onInput(MouseEvent e, Input input) {
     e.stopPropagation();
     e.preventDefault();
-    _inputController.add(Input.entryMode(EntryMode.value));
+    _inputController.add(input);
   }
 
   _onClickTile(int c, int r) => (MouseEvent e) {

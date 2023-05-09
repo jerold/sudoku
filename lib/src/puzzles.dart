@@ -48,6 +48,7 @@ final hardPuzzle = [
   Input.cursor(column: 8, row: 8),
   Input.toggle(value: 8),
   Input.entryMode(EntryMode.value),
+  Input.cursor(),
 ];
 
 final expertPuzzle = [
@@ -98,4 +99,5 @@ final expertPuzzle = [
   Input.cursor(column: 8, row: 4),
   Input.toggle(value: 3),
   Input.entryMode(EntryMode.value),
+  Input.cursor(),
 ];

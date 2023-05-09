@@ -2,12 +2,15 @@ part of sudoku;
 
 abstract class Input {
   factory Input.reset() => ResetInput();
+  factory Input.rewind() => RewindInput();
   factory Input.entryMode(EntryMode mode) => EntryModeInput(mode);
   factory Input.cursor({int? column, int? row, Move? move}) => CursorInput(column, row, move);
   factory Input.toggle({int? value}) => ToggleInput(value);
 }
 
 class ResetInput implements Input {}
+
+class RewindInput implements Input {}
 
 class EntryModeInput implements Input {
   EntryModeInput(this.entryMode);
