@@ -11,7 +11,8 @@
 
   --color-puzzle: #a7eec9;
   --color-entry: #eeeeee;
-  --color-hint: #C84B31;
+  --color-hint-last-standing: #C84B31;
+  --color-hint-forced-out: #31C84B;
   --color-warn: #C84B31;
   --color-candidate: #6f645d;
 
@@ -94,7 +95,11 @@ body {
 }
 
 .last-standing {
-  color: var(--color-hint) !important;
+  color: var(--color-hint-last-standing) !important;
+}
+
+.forced-out {
+  color: var(--color-hint-forced-out) !important;
 }
 
 .tile {

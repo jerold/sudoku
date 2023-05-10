@@ -42,7 +42,7 @@ class Game {
     _controller.input.listen(_handleInput);
     _initPuzzle();
 
-    evilPuzzle.forEach(_handleInput);
+    expertPuzzle.forEach(_handleInput);
   }
 
   _redraw() => _redrawController.add(_puzzle);
@@ -65,6 +65,7 @@ class Game {
         _handleToggle(input as ToggleInput);
         break;
     }
+    _redraw();
   }
 
   void _initPuzzle() {
@@ -88,8 +89,7 @@ class Game {
         _userCandidates.removeLast();
       }
       _history.removeLast();
-      _updateAutoCandidates();
-      _updateFoundValues(auto: false);
+      _calculate(auto: false);
     }
   }
 
@@ -107,8 +107,9 @@ class Game {
     // }
 
     _mode = entryModeInput.entryMode;
-    _updateAutoCandidates();
-    _updateFoundValues();
+    if (_mode != EntryMode.puzzle) {
+      _calculate();
+    }
   }
 
   void _handleCursor(CursorInput cursorInput) {
@@ -119,7 +120,6 @@ class Game {
       _column = cursorInput.column;
       _row = cursorInput.row;
     }
-    _redraw();
   }
 
   void _handleToggle(ToggleInput toggleInput) {
@@ -131,38 +131,44 @@ class Game {
   void _toggleCell(int column, int row, int? value, EntryMode mode) {
     if (mode == EntryMode.puzzle) {
       _puzzle = _puzzle.copy()..toggle(column, row, value);
-      _updateAutoCandidates();
-    } else if (mode == EntryMode.value) {
-      _entries.add(_entries.last.copy()..toggle(column, row, value));
+    } else {
+      if (mode == EntryMode.value) {
+        _entries.add(_entries.last.copy()..toggle(column, row, value));
+      } else if (mode == EntryMode.candidate) {
+        _userCandidates.add(_userCandidates.last.copy()..toggle(column, row, value));
+      }
       _history.add(mode);
-      _updateAutoCandidates();
-    } else if (mode == EntryMode.candidate) {
-      _userCandidates.add(_userCandidates.last.copy()..toggle(column, row, value));
-      _history.add(mode);
+      _calculate();
     }
-    _updateFoundValues();
-  }
-
-  void _updateAutoCandidates() {
-    _autoCandidates = findCandidates(values);
-  }
-
-  void _updateFoundValues({bool auto = true}) {
-    _findings = findValues(values, candidates);
-    _invalid = validate(values);
-
-    if (auto && _mode != EntryMode.puzzle && _findings.isNotEmpty) {
-      final c = _findings.keys.first;
-      final r = _findings[c]!.keys.first;
-      final v = _findings[c]![r]!.keys.first;
-      _clearFoundCell(c, r, v);
-    }
-
     _redraw();
   }
 
-  Future _clearFoundCell(int c, int r, int? v) async {
+  void _calculate({bool auto = true}) {
+    _autoCandidates = findCandidates(values);
+    _findings = findValues(values, candidates);
+    _invalid = validate(values, candidates);
+
+    var count = 0;
+    scan((c, r) {
+      if (values[c][r] != null) {
+        count++;
+      }
+    });
+    print('$count / 81');
+
+    if (auto && _mode != EntryMode.puzzle && _findings.isNotEmpty && _invalid.isEmpty) {
+      final c = _findings.keys.first;
+      final r = _findings[c]!.keys.first;
+      final v = _findings[c]![r]!.keys.first;
+      final m = _findings[c]![r]![v]!.mode;
+
+      if (m == Finding.forcedOut) return;
+      _clearFoundCell(c, r, v, m);
+    }
+  }
+
+  Future _clearFoundCell(int c, int r, int v, EntryMode m) async {
     await Future.delayed(Duration(milliseconds: 50));
-    _toggleCell(c, r, v, EntryMode.value);
+    _toggleCell(c, r, v, m);
   }
 }
