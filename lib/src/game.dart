@@ -46,11 +46,11 @@ class Game {
     _loadNextPuzzle();
   }
 
-  var _parsePuzzleIndex = 0;
+  var _parsePuzzleIndex = 2;
   void _loadNextPuzzle() {
     print('Puzzle($_parsePuzzleIndex)');
     _initPuzzle();
-    parsedPuzzle(_parsePuzzleIndex, easyPuzzles).forEach(_handleInput);
+    parsedPuzzle(_parsePuzzleIndex, evilPuzzles).forEach(_handleInput);
     _parsePuzzleIndex++;
   }
 
@@ -155,28 +155,28 @@ class Game {
     _findings = findValues(values, candidates);
     _invalid = validate(values, candidates);
 
-    if (_findings.isEmpty) {
-      var count = 0;
-      scan((y, x) {
-        if (values[y][x] != null) {
-          count++;
-        }
-      });
-      print('$count / 81');
+    // if (_findings.isEmpty) {
+    //   var count = 0;
+    //   scan((y, x) {
+    //     if (values[y][x] != null) {
+    //       count++;
+    //     }
+    //   });
+    //   print('$count / 81');
 
-      _loadNextPuzzle();
-      return;
-    }
+    //   _loadNextPuzzle();
+    //   return;
+    // }
 
-    if (auto && _mode != EntryMode.puzzle && _findings.isNotEmpty && _invalid.isEmpty) {
-      final fy = _findings.keys.first;
-      final fx = _findings[fy]!.keys.first;
-      final fv = _findings[fy]![fx]!.keys.first;
-      final fm = _findings[fy]![fx]![fv]!.mode;
+    // if (auto && _mode != EntryMode.puzzle && _findings.isNotEmpty && _invalid.isEmpty) {
+    //   final fy = _findings.keys.first;
+    //   final fx = _findings[fy]!.keys.first;
+    //   final fv = _findings[fy]![fx]!.keys.first;
+    //   final fm = _findings[fy]![fx]![fv]!.mode;
 
-      if (fm == Finding.forcedOut) return;
-      _clearFoundCell(fy, fx, fv, fm);
-    }
+    //   if (fm == Finding.forcedOut) return;
+    //   _clearFoundCell(fy, fx, fv, fm);
+    // }
   }
 
   Future _clearFoundCell(int cellY, int cellX, int value, EntryMode mode) async {

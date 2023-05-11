@@ -212,7 +212,6 @@ Map<int, Map<int, Map<int, Finding>>> findNeededElsewhereCandidates(
 ) {
   final findings = <int, Map<int, Map<int, Finding>>>{};
 
-  // TODO: figure out why puzzle 42 breaks this.
   for (int setSize = 2; setSize < 9; setSize++) {
     scanLine((i) {
       checkForNeededElsewhere(IthIterator ithIterator) {
@@ -409,4 +408,4 @@ void scanIthColumn(int i, CellHandler handler) => scanLine((j) => handler(j, i))
 
 void scanIthRow(int i, CellHandler handler) => scanLine((j) => handler(i, j));
 
-void scanIthBox(int i, CellHandler handler) => scanLine((i) => handler(_boxOrigins[i][0], _boxOrigins[i][1]));
+void scanIthBox(int i, CellHandler handler) => scanBox(_boxOrigins[i][0], _boxOrigins[i][1], handler);
