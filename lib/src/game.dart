@@ -42,7 +42,16 @@ class Game {
     _controller.input.listen(_handleInput);
     _initPuzzle();
 
-    expertPuzzle.forEach(_handleInput);
+    // evilPuzzle.forEach(_handleInput);
+    _loadNextPuzzle();
+  }
+
+  var _parsePuzzleIndex = 0;
+  void _loadNextPuzzle() {
+    print('Puzzle($_parsePuzzleIndex)');
+    _initPuzzle();
+    parsedPuzzle(_parsePuzzleIndex, easyPuzzles).forEach(_handleInput);
+    _parsePuzzleIndex++;
   }
 
   _redraw() => _redrawController.add(_puzzle);
@@ -97,11 +106,8 @@ class Game {
     // For saving off a puzzle for reentry on init
     // if (_mode == EntryMode.puzzle && _mode != entryModeInput.entryMode) {
     //   print("Puzzle START -------------");
-    //   values.scan((column, row) {
-    //     if (values[column][row] != null) {
-    //       print("Input.cursor(column: $column, row: $row),");
-    //       print("Input.toggle(value: ${values[column][row]}),");
-    //     }
+    //   scanLine((y) {
+    //     print("\"${values[y].map((v) => v ?? '0').join()}\",");
     //   });
     //   print("Puzzle END ---------------");
     // }
@@ -149,13 +155,18 @@ class Game {
     _findings = findValues(values, candidates);
     _invalid = validate(values, candidates);
 
-    var count = 0;
-    scan((y, x) {
-      if (values[y][x] != null) {
-        count++;
-      }
-    });
-    print('$count / 81');
+    if (_findings.isEmpty) {
+      var count = 0;
+      scan((y, x) {
+        if (values[y][x] != null) {
+          count++;
+        }
+      });
+      print('$count / 81');
+
+      _loadNextPuzzle();
+      return;
+    }
 
     if (auto && _mode != EntryMode.puzzle && _findings.isNotEmpty && _invalid.isEmpty) {
       final fy = _findings.keys.first;
@@ -169,7 +180,6 @@ class Game {
   }
 
   Future _clearFoundCell(int cellY, int cellX, int value, EntryMode mode) async {
-    await Future.delayed(Duration(milliseconds: 50));
-    _toggleCell(cellY, cellX, value, mode);
+    window.requestAnimationFrame((_) => _toggleCell(cellY, cellX, value, mode));
   }
 }

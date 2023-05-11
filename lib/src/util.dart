@@ -20,6 +20,7 @@ enum EntryMode {
 enum Finding {
   lastStanding, // this is the only remaining place for a value in its row/column/cube
   forcedOut, // this candidate can be removed as the value must exist in its row/column in a different cube
+  neededElsewhere, // this candidate can only by in one of a known set of cells, and this cell isn't one of them
 }
 
 extension FindingX on Finding {
@@ -29,6 +30,8 @@ extension FindingX on Finding {
         return 'last-standing';
       case Finding.forcedOut:
         return 'forced-out';
+      case Finding.neededElsewhere:
+        return 'needed-elsewhere';
     }
   }
 
@@ -37,6 +40,8 @@ extension FindingX on Finding {
       case Finding.lastStanding:
         return EntryMode.value;
       case Finding.forcedOut:
+        return EntryMode.candidate;
+      case Finding.neededElsewhere:
         return EntryMode.candidate;
     }
   }
@@ -195,7 +200,55 @@ Map<int, Map<int, Map<int, Finding>>> findValues(List<List<int?>> values, List<L
 
   findings.combine(findForcedOutCandidates(values, candidates));
   findings.combine(findLastStandingValues(values, candidates));
+  findings.combine(findNeededElsewhereCandidates(values, candidates));
 
+  return findings;
+}
+
+// if a the same n-sized Set appears as the only candidates of n cells, that Set's candidates must exist in only those cells
+Map<int, Map<int, Map<int, Finding>>> findNeededElsewhereCandidates(
+  List<List<int?>> values,
+  List<List<Set<int>>> candidates,
+) {
+  final findings = <int, Map<int, Map<int, Finding>>>{};
+
+  // TODO: figure out why puzzle 42 breaks this.
+  for (int setSize = 2; setSize < 9; setSize++) {
+    scanLine((i) {
+      checkForNeededElsewhere(IthIterator ithIterator) {
+        final setCounts = <String, int>{};
+        final sets = <String, Set<int>>{};
+        ithIterator(i, (y, x) {
+          if (values[y][x] == null && candidates[y][x].length == setSize) {
+            final setKey = candidates[y][x].toString();
+            setCounts[setKey] = (setCounts[setKey] ?? 0) + 1;
+            sets.putIfAbsent(setKey, () => candidates[y][x]);
+          }
+        });
+        for (final setKey in setCounts.keys) {
+          if (setCounts[setKey] == setSize) {
+            final candidatesNeededElsewhere = sets[setKey]!;
+            ithIterator(i, (y, x) {
+              if (setKey != candidates[y][x].toString()) {
+                for (final value in candidatesNeededElsewhere) {
+                  if (candidates[y][x].contains(value)) {
+                    findings.putIfAbsent(y, () => <int, Map<int, Finding>>{});
+                    findings[y]!.putIfAbsent(x, () => <int, Finding>{});
+                    findings[y]![x]![value] = Finding.neededElsewhere;
+                  }
+                }
+              }
+            });
+          }
+        }
+      }
+
+      // scan all rows/columns/boxes
+      checkForNeededElsewhere(scanIthColumn);
+      checkForNeededElsewhere(scanIthRow);
+      checkForNeededElsewhere(scanIthBox);
+    });
+  }
   return findings;
 }
 
@@ -273,10 +326,10 @@ Map<int, Map<int, Map<int, Finding>>> findLastStandingValues(
       findings[y]![x]![candidates[y][x].first] = Finding.lastStanding;
     } else {
       var foundLastStandingValue = false;
-      checkForLastStanding(Iterator dimensionIterator) {
+      checkForLastStanding(Iterator iterator) {
         if (!foundLastStandingValue) {
           var remainingOptions = _allNine();
-          dimensionIterator(y, x, (iy, ix) {
+          iterator(y, x, (iy, ix) {
             final value = values[iy][ix];
             if (y != iy || x != ix) {
               if (value != null) {
@@ -304,31 +357,56 @@ Map<int, Map<int, Map<int, Finding>>> findLastStandingValues(
   return findings;
 }
 
-void scan(Function(int y, int x) iterator, {int size = 9}) {
-  for (int c = 0; c < size; c++) {
-    for (int r = 0; r < size; r++) {
-      iterator(c, r);
-    }
+void scanLine(Function(int i) iterator, {int size = 9}) {
+  for (int i = 0; i < size; i++) {
+    iterator(i);
   }
 }
+
+void scan(Function(int y, int x) iterator, {int size = 9}) {
+  scanLine((i) {
+    scanLine((j) {
+      iterator(i, j);
+    }, size: size);
+  }, size: size);
+}
+
+// operate on the indicated cell coordinates
+typedef CellHandler = Function(int iy, int ix);
 
 // where y & x determine which column/row/box within the puzzle to iterate
-typedef Iterator = Function(int y, int x, Function(int iy, int ix) iterator);
+typedef Iterator = Function(int y, int x, CellHandler handler);
 
-void scanColumn(int y, int x, Function(int iy, int ix) iterator) {
-  for (int i = 0; i < 9; i++) {
-    iterator((y + i) % 9, x);
-  }
-}
+// scan vertically through the x'th column
+void scanColumn(int y, int x, CellHandler handler) => scanLine((i) => handler((y + i) % 9, x));
 
-void scanRow(int y, int x, Function(int iy, int ix) iterator) {
-  for (int i = 0; i < 9; i++) {
-    iterator(y, (x + i) % 9);
-  }
-}
+// scan horizontally through the y'th row
+void scanRow(int y, int x, CellHandler handler) => scanLine((i) => handler(y, (x + i) % 9));
 
-void scanBox(int y, int x, Function(int iy, int ix) iterator) {
+// scan Left-to-right top-to-bottom the box containing cell [y][x]
+void scanBox(int y, int x, CellHandler handler) {
   final oy = y ~/ 3;
   final ox = x ~/ 3;
-  scan((sy, sx) => iterator(oy * 3 + sy, ox * 3 + sx), size: 3);
+  scan((i, j) => handler(oy * 3 + i, ox * 3 + j), size: 3);
 }
+
+const _boxOrigins = [
+  [0, 0],
+  [0, 3],
+  [0, 6],
+  [3, 0],
+  [3, 3],
+  [3, 6],
+  [6, 0],
+  [6, 3],
+  [6, 6],
+];
+
+// where i determines which column/row/box within the puzzle to iterate
+typedef IthIterator = Function(int i, CellHandler handler);
+
+void scanIthColumn(int i, CellHandler handler) => scanLine((j) => handler(j, i));
+
+void scanIthRow(int i, CellHandler handler) => scanLine((j) => handler(i, j));
+
+void scanIthBox(int i, CellHandler handler) => scanLine((i) => handler(_boxOrigins[i][0], _boxOrigins[i][1]));
