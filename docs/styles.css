@@ -13,6 +13,7 @@
   --color-entry: #eeeeee;
   --color-hint-last-standing: #C84B31;
   --color-hint-forced-out: #31C84B;
+  --color-hint-needed-elsewhere: #a031c8;
   --color-warn: #C84B31;
   --color-candidate: #6f645d;
 
@@ -96,6 +97,10 @@ body {
 
 .last-standing {
   color: var(--color-hint-last-standing) !important;
+}
+
+.needed-elsewhere {
+  color: var(--color-hint-needed-elsewhere) !important;
 }
 
 .forced-out {
