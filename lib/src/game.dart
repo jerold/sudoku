@@ -28,15 +28,15 @@ class Game {
   late EntryMode _mode = EntryMode.value;
   EntryMode get mode => _mode;
 
-  int? _column;
-  int? get column => _column;
+  int? _y;
+  int? get column => _y;
 
-  int? _row;
-  int? get row => _row;
+  int? _x;
+  int? get row => _x;
 
-  int? get box => getBox(_column, _row);
+  int? get box => getBox(_y, _x);
 
-  bool get hasCursor => _column != null && _row != null;
+  bool get hasCursor => _y != null && _x != null;
 
   Game({required Controller controller}) : _controller = controller {
     _controller.input.listen(_handleInput);
@@ -69,8 +69,8 @@ class Game {
   }
 
   void _initPuzzle() {
-    _column = null;
-    _row = null;
+    _y = null;
+    _x = null;
     _mode = EntryMode.puzzle;
     _puzzle = emptyPuzzle();
     _entries = [emptyPuzzle()];
@@ -112,30 +112,31 @@ class Game {
     }
   }
 
+  // either move is set, or y & x, or y & x are null which clears the cursor
   void _handleCursor(CursorInput cursorInput) {
     if (cursorInput.move != null) {
-      _column = cursorInput.move!.nextColumn(_column);
-      _row = cursorInput.move!.nextRow(_row);
+      _y = cursorInput.move!.nextY(_y);
+      _x = cursorInput.move!.nextX(_x);
     } else {
-      _column = cursorInput.column;
-      _row = cursorInput.row;
+      _y = cursorInput.column;
+      _x = cursorInput.row;
     }
   }
 
   void _handleToggle(ToggleInput toggleInput) {
     if (hasCursor) {
-      _toggleCell(_column!, _row!, toggleInput.value, _mode);
+      _toggleCell(_y!, _x!, toggleInput.value, _mode);
     }
   }
 
-  void _toggleCell(int column, int row, int? value, EntryMode mode) {
+  void _toggleCell(int cellY, int cellX, int? value, EntryMode mode) {
     if (mode == EntryMode.puzzle) {
-      _puzzle = _puzzle.copy()..toggle(column, row, value);
+      _puzzle = _puzzle.copy()..toggle(cellY, cellX, value);
     } else {
       if (mode == EntryMode.value) {
-        _entries.add(_entries.last.copy()..toggle(column, row, value));
+        _entries.add(_entries.last.copy()..toggle(cellY, cellX, value));
       } else if (mode == EntryMode.candidate) {
-        _userCandidates.add(_userCandidates.last.copy()..toggle(column, row, value));
+        _userCandidates.add(_userCandidates.last.copy()..toggle(cellY, cellX, value));
       }
       _history.add(mode);
       _calculate();
@@ -149,26 +150,26 @@ class Game {
     _invalid = validate(values, candidates);
 
     var count = 0;
-    scan((c, r) {
-      if (values[c][r] != null) {
+    scan((y, x) {
+      if (values[y][x] != null) {
         count++;
       }
     });
     print('$count / 81');
 
     if (auto && _mode != EntryMode.puzzle && _findings.isNotEmpty && _invalid.isEmpty) {
-      final c = _findings.keys.first;
-      final r = _findings[c]!.keys.first;
-      final v = _findings[c]![r]!.keys.first;
-      final m = _findings[c]![r]![v]!.mode;
+      final fy = _findings.keys.first;
+      final fx = _findings[fy]!.keys.first;
+      final fv = _findings[fy]![fx]!.keys.first;
+      final fm = _findings[fy]![fx]![fv]!.mode;
 
-      if (m == Finding.forcedOut) return;
-      _clearFoundCell(c, r, v, m);
+      if (fm == Finding.forcedOut) return;
+      _clearFoundCell(fy, fx, fv, fm);
     }
   }
 
-  Future _clearFoundCell(int c, int r, int v, EntryMode m) async {
+  Future _clearFoundCell(int cellY, int cellX, int value, EntryMode mode) async {
     await Future.delayed(Duration(milliseconds: 50));
-    _toggleCell(c, r, v, m);
+    _toggleCell(cellY, cellX, value, mode);
   }
 }

@@ -43,35 +43,35 @@ extension FindingX on Finding {
 }
 
 extension MoveX on Move {
-  int nextColumn(int? column) {
+  int nextY(int? y) {
     switch (this) {
       case Move.up:
-        return column != null ? (column - 1) % 9 : 8;
+        return y != null ? (y - 1) % 9 : 8;
       case Move.down:
-        return column != null ? (column + 1) % 9 : 0;
+        return y != null ? (y + 1) % 9 : 0;
       case Move.left:
-        return column ?? 4;
+        return y ?? 4;
       case Move.right:
-        return column ?? 4;
+        return y ?? 4;
     }
   }
 
-  int nextRow(int? row) {
+  int nextX(int? x) {
     switch (this) {
       case Move.up:
-        return row ?? 4;
+        return x ?? 4;
       case Move.down:
-        return row ?? 4;
+        return x ?? 4;
       case Move.left:
-        return row != null ? (row - 1) % 9 : 8;
+        return x != null ? (x - 1) % 9 : 8;
       case Move.right:
-        return row != null ? (row + 1) % 9 : 0;
+        return x != null ? (x + 1) % 9 : 0;
     }
   }
 }
 
 // Box index used for quickly finding out if coordinates are in the same Box
-int? getBox(int? column, int? row) => row != null && column != null ? row ~/ 3 + column ~/ 3 * 3 : null;
+int? getBox(int? y, int? x) => x != null && y != null ? x ~/ 3 + y ~/ 3 * 3 : null;
 
 List<int?> _emptyNine() => List.filled(9, null);
 List<List<int?>> emptyPuzzle() => List.generate(9, (_) => _emptyNine());
@@ -84,16 +84,16 @@ extension PuzzleX on List<List<int?>> {
   // assume no intersections (if there are puzzle's value is trusted)
   List<List<int?>> copy({List<List<int?>>? withMerge}) {
     final puzzle = emptyPuzzle();
-    scan((c, r) => puzzle[c][r] = this[c][r] ?? withMerge?[c][r]);
+    scan((y, x) => puzzle[y][x] = this[y][x] ?? withMerge?[y][x]);
     return puzzle;
   }
 
-  void toggle(int column, int row, int? value) {
-    if (this[column][row] == value) {
-      this[column][row] = null;
+  void toggle(int y, int x, int? value) {
+    if (this[y][x] == value) {
+      this[y][x] = null;
       return;
     }
-    this[column][row] = value;
+    this[y][x] = value;
   }
 }
 
@@ -101,40 +101,38 @@ extension CandidateX on List<List<Set<int>>> {
   List<List<Set<int>>> copy({List<List<Set<int>>>? withMerge}) {
     final candidates = emptyCandidates();
     if (withMerge != null) {
-      scan((c, r) {
+      scan((y, x) {
         for (final value in possibleValues) {
-          if (this[c][r].contains(value) && withMerge[c][r].contains(value)) {
-            candidates[c][r].add(value);
+          if (this[y][x].contains(value) && withMerge[y][x].contains(value)) {
+            candidates[y][x].add(value);
           }
         }
       });
     } else {
-      scan((c, r) => candidates[c][r] = this[c][r].toSet());
+      scan((y, x) => candidates[y][x] = this[y][x].toSet());
     }
     return candidates;
   }
 
   // passing a null value will reset the candidates (in case user makes a mistake)
-  void toggle(int column, int row, int? value) {
-    if (value == null) this[column][row] = _allNine();
-    if (this[column][row].contains(value!)) {
-      this[column][row].remove(value);
+  void toggle(int y, int x, int? value) {
+    if (value == null) this[y][x] = _allNine();
+    if (this[y][x].contains(value!)) {
+      this[y][x].remove(value);
     } else {
-      this[column][row].add(value);
+      this[y][x].add(value);
     }
   }
 }
 
 extension FindingsX on Map<int, Map<int, Map<int, Finding>>> {
   void combine(Map<int, Map<int, Map<int, Finding>>> other) {
-    for (final cKey in other.keys) {
-      putIfAbsent(cKey, () => <int, Map<int, Finding>>{});
-      final rKeys = other[cKey]!.keys;
-      for (final rKey in rKeys) {
-        this[cKey]!.putIfAbsent(rKey, () => <int, Finding>{});
-        final vKeys = other[cKey]![rKey]!.keys;
-        for (final vKey in vKeys) {
-          this[cKey]![rKey]![vKey] = other[cKey]![rKey]![vKey]!;
+    for (final y in other.keys) {
+      putIfAbsent(y, () => <int, Map<int, Finding>>{});
+      for (final x in other[y]!.keys) {
+        this[y]!.putIfAbsent(x, () => <int, Finding>{});
+        for (final value in other[y]![x]!.keys) {
+          this[y]![x]![value] = other[y]![x]![value]!;
         }
       }
     }
@@ -144,33 +142,33 @@ extension FindingsX on Map<int, Map<int, Map<int, Finding>>> {
 // find any values that conflict with
 Map<int, Map<int, bool>> validate(List<List<int?>> values, List<List<Set<int>>> candidates) {
   final invalid = <int, Map<int, bool>>{};
-  scan((c, r) {
-    final value = values[c][r];
+  scan((y, x) {
+    final value = values[y][x];
 
     if (value == null) {
-      if (candidates[c][r].isEmpty) {
-        invalid.putIfAbsent(c, () => <int, bool>{});
-        invalid[c]![r] = true;
+      if (candidates[y][x].isEmpty) {
+        invalid.putIfAbsent(y, () => <int, bool>{});
+        invalid[y]![x] = true;
       }
     } else {
       var valueCount = 1;
       validateDimention(Iterator iterator) {
-        iterator(c, r, (column, row) {
-          if (c != column || r != row) {
-            if (value == values[column][row]) {
+        iterator(y, x, (iy, ix) {
+          if (y != iy || x != ix) {
+            if (value == values[iy][ix]) {
               valueCount++;
             }
           }
         });
       }
 
-      validateDimention(iterateColumn);
-      validateDimention(iterateRow);
-      validateDimention(iterateBox);
+      validateDimention(scanColumn);
+      validateDimention(scanRow);
+      validateDimention(scanBox);
 
       if (valueCount > 1) {
-        invalid.putIfAbsent(c, () => <int, bool>{});
-        invalid[c]![r] = true;
+        invalid.putIfAbsent(y, () => <int, bool>{});
+        invalid[y]![x] = true;
       }
     }
   });
@@ -180,20 +178,18 @@ Map<int, Map<int, bool>> validate(List<List<int?>> values, List<List<Set<int>>> 
 // remove value from candidates within associated row/column/cube
 List<List<Set<int>>> findCandidates(List<List<int?>> values) {
   final candidates = fullCandidates();
-  scan((c, r) {
-    if (values[c][r] != null) {
-      final value = values[c][r]!;
-      scan((column, row) {
-        if (column == c || row == r || getBox(column, row) == getBox(c, r)) {
-          candidates[column][row].remove(value);
-        }
-      });
+  scan((y, x) {
+    if (values[y][x] != null) {
+      final value = values[y][x]!;
+      scanColumn(y, x, (iy, ix) => candidates[iy][ix].remove(value));
+      scanRow(y, x, (iy, ix) => candidates[iy][ix].remove(value));
+      scanBox(y, x, (iy, ix) => candidates[iy][ix].remove(value));
     }
   });
   return candidates;
 }
 
-// [column][row][candidate] = Finding
+// [y][x][value/candidate] = Finding
 Map<int, Map<int, Map<int, Finding>>> findValues(List<List<int?>> values, List<List<Set<int>>> candidates) {
   final findings = <int, Map<int, Map<int, Finding>>>{};
 
@@ -211,109 +207,104 @@ Map<int, Map<int, Map<int, Finding>>> findForcedOutCandidates(
   final findings = <int, Map<int, Map<int, Finding>>>{};
 
   // iterate each of the 9 boxes
-  scan((c, r) {
-    final bc = c * 3;
-    final br = r * 3;
+  scan((y, x) {
+    final by = y * 3;
+    final bx = x * 3;
 
-    final valueColumns = <int, Set<int>>{};
-    final valueRows = <int, Set<int>>{};
-    final columns = <int>{};
-    final rows = <int>{};
+    final valueYs = <int, Set<int>>{};
+    final valueXs = <int, Set<int>>{};
+    final scanYs = <int>{};
+    final scanXs = <int>{};
     // within this box see if any candidate is in a single column or row
-    iterateBox(bc, br, (column, row) {
-      columns.add(column);
-      rows.add(row);
-      if (values[column][row] == null) {
-        for (final candidate in candidates[column][row]) {
-          valueColumns.putIfAbsent(candidate, () => <int>{});
-          valueColumns[candidate]!.add(column);
-          valueRows.putIfAbsent(candidate, () => <int>{});
-          valueRows[candidate]!.add(row);
+    scanBox(by, bx, (iy, ix) {
+      scanYs.add(iy);
+      scanXs.add(ix);
+      if (values[iy][ix] == null) {
+        for (final candidate in candidates[iy][ix]) {
+          valueYs.putIfAbsent(candidate, () => <int>{});
+          valueYs[candidate]!.add(iy);
+          valueXs.putIfAbsent(candidate, () => <int>{});
+          valueXs[candidate]!.add(ix);
         }
       }
     });
 
-    valueColumns.forEach((value, column) {
-      if (column.length == 1) {
-        iterateRow(column.first, valueRows[value]!.first, (vc, vr) {
-          if (!rows.contains(vr) && candidates[vc][vr].contains(value)) {
-            findings.putIfAbsent(vc, () => <int, Map<int, Finding>>{});
-            findings[vc]!.putIfAbsent(vr, () => <int, Finding>{});
-            findings[vc]![vr]![value] = Finding.forcedOut;
+    valueYs.forEach((value, vy) {
+      if (vy.length == 1) {
+        scanRow(vy.first, valueXs[value]!.first, (iy, ix) {
+          if (!scanXs.contains(ix) && candidates[iy][ix].contains(value)) {
+            findings.putIfAbsent(iy, () => <int, Map<int, Finding>>{});
+            findings[iy]!.putIfAbsent(ix, () => <int, Finding>{});
+            findings[iy]![ix]![value] = Finding.forcedOut;
           }
         });
       }
     });
 
-    valueRows.forEach((value, row) {
-      if (row.length == 1) {
-        iterateColumn(valueColumns[value]!.first, row.first, (vc, vr) {
-          if (!columns.contains(vc) && candidates[vc][vr].contains(value)) {
-            findings.putIfAbsent(vc, () => <int, Map<int, Finding>>{});
-            findings[vc]!.putIfAbsent(vr, () => <int, Finding>{});
-            findings[vc]![vr]![value] = Finding.forcedOut;
+    valueXs.forEach((value, vx) {
+      if (vx.length == 1) {
+        scanColumn(valueYs[value]!.first, vx.first, (iy, ix) {
+          if (!scanYs.contains(iy) && candidates[iy][ix].contains(value)) {
+            findings.putIfAbsent(iy, () => <int, Map<int, Finding>>{});
+            findings[iy]!.putIfAbsent(ix, () => <int, Finding>{});
+            findings[iy]![ix]![value] = Finding.forcedOut;
           }
         });
       }
     });
   }, size: 3);
 
-  // if (findings.isNotEmpty) throw Exception('aha');
-
   return findings;
 }
 
-// remove options from the shared row/column/box, if only one remains that is [c][r]'s value
+// remove options from the shared row/column/box, if only one remains that is [y][x]'s value
 Map<int, Map<int, Map<int, Finding>>> findLastStandingValues(
   List<List<int?>> values,
   List<List<Set<int>>> candidates,
 ) {
   final findings = <int, Map<int, Map<int, Finding>>>{};
 
-  scan((c, r) {
-    if (values[c][r] != null) return;
-    if (candidates[c][r].length == 1) {
+  scan((y, x) {
+    if (values[y][x] != null) return;
+    if (candidates[y][x].length == 1) {
       // if there's only one candidate for a given cell, and nothing's gone wrong so far, it must be the value right
-      findings.putIfAbsent(c, () => <int, Map<int, Finding>>{});
-      findings[c]!.putIfAbsent(r, () => <int, Finding>{});
-      findings[c]![r]![candidates[c][r].first] = Finding.lastStanding;
+      findings.putIfAbsent(y, () => <int, Map<int, Finding>>{});
+      findings[y]!.putIfAbsent(x, () => <int, Finding>{});
+      findings[y]![x]![candidates[y][x].first] = Finding.lastStanding;
     } else {
       var foundLastStandingValue = false;
       checkForLastStanding(Iterator dimensionIterator) {
         if (!foundLastStandingValue) {
           var remainingOptions = _allNine();
-          dimensionIterator(c, r, (column, row) {
-            final value = values[column][row];
-            if (c != column || r != row) {
+          dimensionIterator(y, x, (iy, ix) {
+            final value = values[iy][ix];
+            if (y != iy || x != ix) {
               if (value != null) {
                 remainingOptions.remove(value);
               } else {
-                remainingOptions.removeAll(candidates[column][row]);
+                remainingOptions.removeAll(candidates[iy][ix]);
               }
             }
           });
           if (remainingOptions.length == 1) {
-            findings.putIfAbsent(c, () => <int, Map<int, Finding>>{});
-            findings[c]!.putIfAbsent(r, () => <int, Finding>{});
-            findings[c]![r]![remainingOptions.first] = Finding.lastStanding;
+            findings.putIfAbsent(y, () => <int, Map<int, Finding>>{});
+            findings[y]!.putIfAbsent(x, () => <int, Finding>{});
+            findings[y]![x]![remainingOptions.first] = Finding.lastStanding;
             foundLastStandingValue = true;
           }
         }
       }
 
-      checkForLastStanding(iterateColumn);
-      checkForLastStanding(iterateRow);
-      checkForLastStanding(iterateBox);
+      checkForLastStanding(scanColumn);
+      checkForLastStanding(scanRow);
+      checkForLastStanding(scanBox);
     }
   });
 
   return findings;
 }
 
-// where column row determine which dimensions to iterate
-typedef Iterator = Function(int column, int row, Function(int, int) iterator);
-
-void scan(Function(int, int) iterator, {int size = 9}) {
+void scan(Function(int y, int x) iterator, {int size = 9}) {
   for (int c = 0; c < size; c++) {
     for (int r = 0; r < size; r++) {
       iterator(c, r);
@@ -321,20 +312,23 @@ void scan(Function(int, int) iterator, {int size = 9}) {
   }
 }
 
-void iterateColumn(int column, int row, Function(int, int) iterator) {
-  for (int c = 0; c < 9; c++) {
-    iterator((column + c) % 9, row);
+// where y & x determine which column/row/box within the puzzle to iterate
+typedef Iterator = Function(int y, int x, Function(int iy, int ix) iterator);
+
+void scanColumn(int y, int x, Function(int iy, int ix) iterator) {
+  for (int i = 0; i < 9; i++) {
+    iterator((y + i) % 9, x);
   }
 }
 
-void iterateRow(int column, int row, Function(int, int) iterator) {
-  for (int r = 0; r < 9; r++) {
-    iterator(column, (row + r) % 9);
+void scanRow(int y, int x, Function(int iy, int ix) iterator) {
+  for (int i = 0; i < 9; i++) {
+    iterator(y, (x + i) % 9);
   }
 }
 
-void iterateBox(int column, int row, Function(int, int) iterator) {
-  final ic = column ~/ 3;
-  final ir = row ~/ 3;
-  scan((c, r) => iterator(ic * 3 + c, ir * 3 + r), size: 3);
+void scanBox(int y, int x, Function(int iy, int ix) iterator) {
+  final oy = y ~/ 3;
+  final ox = x ~/ 3;
+  scan((sy, sx) => iterator(oy * 3 + sy, ox * 3 + sx), size: 3);
 }

@@ -1,1 +1,1 @@
-{"isEntrypoint":true,"deps":[],"parts":["sudoku|lib/src/controller.dart","sudoku|lib/src/game.dart","sudoku|lib/src/input.dart","sudoku|lib/src/puzzles.dart","sudoku|lib/src/renderer.dart","sudoku|lib/src/util.dart"],"conditionalDeps":[],"sdkDeps":["async","html","math"],"hasMain":false}
+{"isEntrypoint":true,"deps":[],"parts":["sudoku|lib/src/controller.dart","sudoku|lib/src/game.dart","sudoku|lib/src/input.dart","sudoku|lib/src/puzzles.dart","sudoku|lib/src/renderer.dart","sudoku|lib/src/util.dart"],"conditionalDeps":[],"sdkDeps":["async","html"],"hasMain":false}
