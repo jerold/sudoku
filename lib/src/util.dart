@@ -145,7 +145,7 @@ extension FindingsX on Map<int, Map<int, Map<int, Finding>>> {
 }
 
 // find any values that conflict with
-Map<int, Map<int, bool>> validate(List<List<int?>> values, List<List<Set<int>>> candidates) {
+Map<int, Map<int, bool>> calcInvalids(List<List<int?>> values, List<List<Set<int>>> candidates) {
   final invalid = <int, Map<int, bool>>{};
   scan((y, x) {
     final value = values[y][x];
@@ -181,7 +181,7 @@ Map<int, Map<int, bool>> validate(List<List<int?>> values, List<List<Set<int>>> 
 }
 
 // remove value from candidates within associated row/column/cube
-List<List<Set<int>>> findCandidates(List<List<int?>> values) {
+List<List<Set<int>>> calcAutoCandidates(List<List<int?>> values) {
   final candidates = fullCandidates();
   scan((y, x) {
     if (values[y][x] != null) {
@@ -195,17 +195,23 @@ List<List<Set<int>>> findCandidates(List<List<int?>> values) {
 }
 
 // [y][x][value/candidate] = Finding
-Map<int, Map<int, Map<int, Finding>>> findValues(List<List<int?>> values, List<List<Set<int>>> candidates) {
+Map<int, Map<int, Map<int, Finding>>> calcFindings(List<List<int?>> values, List<List<Set<int>>> candidates) {
   final findings = <int, Map<int, Map<int, Finding>>>{};
 
-  findings.combine(findForcedOutCandidates(values, candidates));
   findings.combine(findLastStandingValues(values, candidates));
-  findings.combine(findNeededElsewhereCandidates(values, candidates));
+
+  if (findings.isEmpty) {
+    findings.combine(findForcedOutCandidates(values, candidates));
+  }
+
+  if (findings.isEmpty) {
+    findings.combine(findNeededElsewhereCandidates(values, candidates));
+  }
 
   return findings;
 }
 
-// if a the same n-sized Set appears as the only candidates of n cells, that Set's candidates must exist in only those cells
+// if the same n-sized Set appears as the only candidates of n cells, that Set's candidates must exist in only those cells
 Map<int, Map<int, Map<int, Finding>>> findNeededElsewhereCandidates(
   List<List<int?>> values,
   List<List<Set<int>>> candidates,
@@ -259,16 +265,17 @@ Map<int, Map<int, Map<int, Finding>>> findForcedOutCandidates(
   final findings = <int, Map<int, Map<int, Finding>>>{};
 
   // iterate each of the 9 boxes
-  scan((y, x) {
-    final by = y * 3;
-    final bx = x * 3;
 
-    final valueYs = <int, Set<int>>{};
-    final valueXs = <int, Set<int>>{};
+  scanLine((i) {
+    // final by = y * 3;
+    // final bx = x * 3;
+
+    final valueYs = <int, Set<int>>{}; // value to Y's that value is in (is it in a single row)
+    final valueXs = <int, Set<int>>{}; // value tp X's that value is in (is it in a single column)
     final scanYs = <int>{};
     final scanXs = <int>{};
     // within this box see if any candidate is in a single column or row
-    scanBox(by, bx, (iy, ix) {
+    scanIthBox(i, (iy, ix) {
       scanYs.add(iy);
       scanXs.add(ix);
       if (values[iy][ix] == null) {
@@ -281,10 +288,12 @@ Map<int, Map<int, Map<int, Finding>>> findForcedOutCandidates(
       }
     });
 
+    // go through each value and ask if it can only be in a single row within that box
     valueYs.forEach((value, vy) {
       if (vy.length == 1) {
+        // outside that box, this value can not exist in this row
         scanRow(vy.first, valueXs[value]!.first, (iy, ix) {
-          if (!scanXs.contains(ix) && candidates[iy][ix].contains(value)) {
+          if (values[iy][ix] == null && !scanXs.contains(ix) && candidates[iy][ix].contains(value)) {
             findings.putIfAbsent(iy, () => <int, Map<int, Finding>>{});
             findings[iy]!.putIfAbsent(ix, () => <int, Finding>{});
             findings[iy]![ix]![value] = Finding.forcedOut;
@@ -293,10 +302,12 @@ Map<int, Map<int, Map<int, Finding>>> findForcedOutCandidates(
       }
     });
 
+    // go through each value and ask if it can only be in a single column within that box
     valueXs.forEach((value, vx) {
       if (vx.length == 1) {
+        // outside that box, this value can not exist in this column
         scanColumn(valueYs[value]!.first, vx.first, (iy, ix) {
-          if (!scanYs.contains(iy) && candidates[iy][ix].contains(value)) {
+          if (values[iy][ix] == null && !scanYs.contains(iy) && candidates[iy][ix].contains(value)) {
             findings.putIfAbsent(iy, () => <int, Map<int, Finding>>{});
             findings[iy]!.putIfAbsent(ix, () => <int, Finding>{});
             findings[iy]![ix]![value] = Finding.forcedOut;
@@ -304,7 +315,7 @@ Map<int, Map<int, Map<int, Finding>>> findForcedOutCandidates(
         });
       }
     });
-  }, size: 3);
+  });
 
   return findings;
 }

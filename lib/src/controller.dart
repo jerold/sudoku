@@ -27,9 +27,20 @@ Map<int, Input> bindings = {
   55: Input.toggle(value: 7),
   56: Input.toggle(value: 8),
   57: Input.toggle(value: 9),
+  // number pad values keys 1-9
+  97: Input.toggle(value: 1),
+  98: Input.toggle(value: 2),
+  99: Input.toggle(value: 3),
+  100: Input.toggle(value: 4),
+  101: Input.toggle(value: 5),
+  102: Input.toggle(value: 6),
+  103: Input.toggle(value: 7),
+  104: Input.toggle(value: 8),
+  105: Input.toggle(value: 9),
   // change to candidate editing
   67: Input.entryMode(EntryMode.candidate),
   86: Input.entryMode(EntryMode.value),
+  80: Input.auto(),
 };
 
 const keyIds = {
@@ -78,6 +89,7 @@ class Controller {
 
   _onKeyDown(KeyboardEvent e) {
     final keyCode = e.keyCode;
+    // print(keyCode);
     if (bindings.containsKey(keyCode)) {
       _inputController.add(bindings[keyCode]!);
     }

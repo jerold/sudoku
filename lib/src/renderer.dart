@@ -55,7 +55,7 @@ class Renderer {
 
   String _cellClassName(int c, int r, int? value) {
     var classes = <String>['tile'];
-    if (c == _game.column && r == _game.row) {
+    if ((_game.val != null && _game.val == _game.getValue(c, r)) || (c == _game.column && r == _game.row)) {
       classes.add('selected');
     } else if (c == _game.column || r == _game.row || _game.box == getBox(c, r)) {
       classes.add('related');

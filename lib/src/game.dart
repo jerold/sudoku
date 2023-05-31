@@ -22,8 +22,8 @@ class Game {
   late Map<int, Map<int, Map<int, Finding>>> _findings;
   Map<int, Finding> found(int column, int row) => _findings[column]?[row] ?? {};
 
-  late Map<int, Map<int, bool>> _invalid;
-  bool isValid(int column, int row) => !(_invalid.containsKey(column) && _invalid[column]!.containsKey(row));
+  late Map<int, Map<int, bool>> _invalids;
+  bool isValid(int column, int row) => !(_invalids.containsKey(column) && _invalids[column]!.containsKey(row));
 
   late EntryMode _mode = EntryMode.value;
   EntryMode get mode => _mode;
@@ -34,19 +34,23 @@ class Game {
   int? _x;
   int? get row => _x;
 
+  int? _v;
+  int? get val => _v;
+
   int? get box => getBox(_y, _x);
 
   bool get hasCursor => _y != null && _x != null;
+  int? getValue(int? y, int? x) => y != null && x != null ? values[y][x] : null;
 
   Game({required Controller controller}) : _controller = controller {
     _controller.input.listen(_handleInput);
     _initPuzzle();
 
-    // evilPuzzle.forEach(_handleInput);
+    // hardPuzzle.forEach(_handleInput);
     _loadNextPuzzle();
   }
 
-  var _parsePuzzleIndex = 2;
+  var _parsePuzzleIndex = 0;
   void _loadNextPuzzle() {
     print('Puzzle($_parsePuzzleIndex)');
     _initPuzzle();
@@ -73,6 +77,9 @@ class Game {
       case ToggleInput:
         _handleToggle(input as ToggleInput);
         break;
+      case AutoInput:
+        _handleAuto(everything: true);
+        break;
     }
     _redraw();
   }
@@ -86,7 +93,7 @@ class Game {
     _autoCandidates = fullCandidates();
     _userCandidates = [fullCandidates()];
     _history = [];
-    _invalid = {};
+    _invalids = {};
     _redraw();
   }
 
@@ -98,7 +105,7 @@ class Game {
         _userCandidates.removeLast();
       }
       _history.removeLast();
-      _calculate(auto: false);
+      _calc();
     }
   }
 
@@ -114,7 +121,7 @@ class Game {
 
     _mode = entryModeInput.entryMode;
     if (_mode != EntryMode.puzzle) {
-      _calculate();
+      _calc();
     }
   }
 
@@ -127,11 +134,43 @@ class Game {
       _y = cursorInput.column;
       _x = cursorInput.row;
     }
+
+    _v = getValue(_y, _x);
   }
 
   void _handleToggle(ToggleInput toggleInput) {
+    if (!hasCursor) {
+      _v = _v != toggleInput.value ? toggleInput.value : null;
+    }
     if (hasCursor) {
       _toggleCell(_y!, _x!, toggleInput.value, _mode);
+      _calc();
+    }
+  }
+
+  void _handleAuto({bool everything = false}) {
+    if (_mode != EntryMode.puzzle && _findings.isNotEmpty && _invalids.isEmpty) {
+      if (everything) {
+        // recursively solve everything there is a strategy to solve
+        for (final fy in _findings.keys) {
+          for (final fx in _findings[fy]!.keys) {
+            for (final fv in _findings[fy]![fx]!.keys) {
+              final fm = _findings[fy]![fx]![fv]!.mode;
+              _toggleCell(fy, fx, fv, fm);
+            }
+          }
+        }
+        _calc();
+        _handleAuto(everything: everything);
+      } else {
+        // solve a single cell
+        final fy = _findings.keys.first;
+        final fx = _findings[fy]!.keys.first;
+        final fv = _findings[fy]![fx]!.keys.first;
+        final fm = _findings[fy]![fx]![fv]!.mode;
+        _toggleCell(fy, fx, fv, fm);
+        _calc();
+      }
     }
   }
 
@@ -145,41 +184,12 @@ class Game {
         _userCandidates.add(_userCandidates.last.copy()..toggle(cellY, cellX, value));
       }
       _history.add(mode);
-      _calculate();
     }
-    _redraw();
   }
 
-  void _calculate({bool auto = true}) {
-    _autoCandidates = findCandidates(values);
-    _findings = findValues(values, candidates);
-    _invalid = validate(values, candidates);
-
-    // if (_findings.isEmpty) {
-    //   var count = 0;
-    //   scan((y, x) {
-    //     if (values[y][x] != null) {
-    //       count++;
-    //     }
-    //   });
-    //   print('$count / 81');
-
-    //   _loadNextPuzzle();
-    //   return;
-    // }
-
-    // if (auto && _mode != EntryMode.puzzle && _findings.isNotEmpty && _invalid.isEmpty) {
-    //   final fy = _findings.keys.first;
-    //   final fx = _findings[fy]!.keys.first;
-    //   final fv = _findings[fy]![fx]!.keys.first;
-    //   final fm = _findings[fy]![fx]![fv]!.mode;
-
-    //   if (fm == Finding.forcedOut) return;
-    //   _clearFoundCell(fy, fx, fv, fm);
-    // }
-  }
-
-  Future _clearFoundCell(int cellY, int cellX, int value, EntryMode mode) async {
-    window.requestAnimationFrame((_) => _toggleCell(cellY, cellX, value, mode));
+  void _calc() {
+    _autoCandidates = calcAutoCandidates(values);
+    _findings = calcFindings(values, candidates);
+    _invalids = calcInvalids(values, candidates);
   }
 }

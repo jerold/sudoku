@@ -22,8 +22,9 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
   var $runtimeType = dartx.runtimeType;
   var $isNotEmpty = dartx.isNotEmpty;
   var $removeLast = dartx.removeLast;
+  var $isEmpty = dartx.isEmpty;
+  var $first = dartx.first;
   var $add = dartx.add;
-  var $requestAnimationFrame = dartx.requestAnimationFrame;
   var $length = dartx.length;
   var $className = dartx.className;
   var $innerHtml = dartx.innerHtml;
@@ -35,9 +36,7 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
   var $truncate = dartx.truncate;
   var $_set = dartx._set;
   var $putIfAbsent = dartx.putIfAbsent;
-  var $isEmpty = dartx.isEmpty;
   var $toString = dartx.toString;
-  var $first = dartx.first;
   dart._checkModuleNullSafetyMode(true);
   var T = {
     StreamControllerOfInput: () => (T.StreamControllerOfInput = dart.constFn(async.StreamController$(sudoku.Input)))(),
@@ -56,7 +55,6 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
     JSArrayOfListOfListOfSetOfint: () => (T.JSArrayOfListOfListOfSetOfint = dart.constFn(_interceptors.JSArray$(T.ListOfListOfSetOfint())))(),
     MapOfint$bool: () => (T.MapOfint$bool = dart.constFn(core.Map$(core.int, core.bool)))(),
     IdentityMapOfint$MapOfint$bool: () => (T.IdentityMapOfint$MapOfint$bool = dart.constFn(_js_helper.IdentityMap$(core.int, T.MapOfint$bool())))(),
-    numTovoid: () => (T.numTovoid = dart.constFn(dart.fnType(dart.void, [core.num])))(),
     JSArrayOfString: () => (T.JSArrayOfString = dart.constFn(_interceptors.JSArray$(core.String)))(),
     JSArrayOfInput: () => (T.JSArrayOfInput = dart.constFn(_interceptors.JSArray$(sudoku.Input)))(),
     ListOfint: () => (T.ListOfint = dart.constFn(core.List$(core.int)))(),
@@ -208,202 +206,217 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
       return C[19] = dart.constMap(core.int, core.String, [1, "one", 2, "two", 3, "three", 4, "four", 5, "five", 6, "six", 7, "seven", 8, "eight", 9, "nine"]);
     },
     get C21() {
-      return C[21] = dart.constList(["049002000", "000007000", "260000950", "034070000", "600205001", "000060890", "082000046", "000800000", "000300510"], core.String);
+      return C[21] = dart.constList(["086010047", "001500000", "000000002", "060000500", "000040200", "700900064", "070050081", "000000600", "900003000"], core.String);
     },
     get C22() {
-      return C[22] = dart.constList(["000700100", "007006830", "000300056", "000070010", "400902005", "010060000", "270001000", "069800200", "005007000"], core.String);
+      return C[22] = dart.constList(["049002000", "000007000", "260000950", "034070000", "600205001", "000060890", "082000046", "000800000", "000300510"], core.String);
     },
     get C23() {
-      return C[23] = dart.constList(["900001005", "600000140", "000058000", "500704000", "090080030", "000306008", "000460000", "024000009", "300100007"], core.String);
-    },
-    get C20() {
-      return C[20] = dart.constList([C[21] || CT.C21, C[22] || CT.C22, C[23] || CT.C23], T.ListOfString());
-    },
-    get C25() {
-      return C[25] = dart.constList(["003020600", "900305001", "001806400", "008102900", "700000008", "006708200", "002609500", "800203009", "005010300"], core.String);
-    },
-    get C26() {
-      return C[26] = dart.constList(["200080300", "060070084", "030500209", "000105408", "000000000", "402706000", "301007040", "720040060", "004010003"], core.String);
-    },
-    get C27() {
-      return C[27] = dart.constList(["000000907", "000420180", "000705026", "100904000", "050000040", "000507009", "920108000", "034059000", "507000000"], core.String);
-    },
-    get C28() {
-      return C[28] = dart.constList(["030050040", "008010500", "460000012", "070502080", "000603000", "040109030", "250000098", "001020600", "080060020"], core.String);
-    },
-    get C29() {
-      return C[29] = dart.constList(["020810740", "700003100", "090002805", "009040087", "400208003", "160030200", "302700060", "005600008", "076051090"], core.String);
-    },
-    get C30() {
-      return C[30] = dart.constList(["100920000", "524010000", "000000070", "050008102", "000000000", "402700090", "060000000", "000030945", "000071006"], core.String);
-    },
-    get C31() {
-      return C[31] = dart.constList(["043080250", "600000000", "000001094", "900004070", "000608000", "010200003", "820500000", "000000005", "034090710"], core.String);
-    },
-    get C32() {
-      return C[32] = dart.constList(["480006902", "002008001", "900370060", "840010200", "003704100", "001060049", "020085007", "700900600", "609200018"], core.String);
-    },
-    get C33() {
-      return C[33] = dart.constList(["000900002", "050123400", "030000160", "908000000", "070000090", "000000205", "091000050", "007439020", "400007000"], core.String);
-    },
-    get C34() {
-      return C[34] = dart.constList(["001900003", "900700160", "030005007", "050000009", "004302600", "200000070", "600100030", "042007006", "500006800"], core.String);
-    },
-    get C35() {
-      return C[35] = dart.constList(["000125400", "008400000", "420800000", "030000095", "060902010", "510000060", "000003049", "000007200", "001298000"], core.String);
-    },
-    get C36() {
-      return C[36] = dart.constList(["062340750", "100005600", "570000040", "000094800", "400000006", "005830000", "030000091", "006400007", "059083260"], core.String);
-    },
-    get C37() {
-      return C[37] = dart.constList(["300000000", "005009000", "200504000", "020000700", "160000058", "704310600", "000890100", "000067080", "000005437"], core.String);
-    },
-    get C38() {
-      return C[38] = dart.constList(["630000000", "000500008", "005674000", "000020000", "003401020", "000000345", "000007004", "080300902", "947100080"], core.String);
-    },
-    get C39() {
-      return C[39] = dart.constList(["000020040", "008035000", "000070602", "031046970", "200000000", "000501203", "049000730", "000000010", "800004000"], core.String);
-    },
-    get C40() {
-      return C[40] = dart.constList(["361025900", "080960010", "400000057", "008000471", "000603000", "259000800", "740000005", "020018060", "005470329"], core.String);
-    },
-    get C41() {
-      return C[41] = dart.constList(["050807020", "600010090", "702540006", "070020301", "504000908", "103080070", "900076205", "060090003", "080103040"], core.String);
-    },
-    get C42() {
-      return C[42] = dart.constList(["080005000", "000003457", "000070809", "060400903", "007010500", "408007020", "901020000", "842300000", "000100080"], core.String);
-    },
-    get C43() {
-      return C[43] = dart.constList(["003502900", "000040000", "106000305", "900251008", "070408030", "800763001", "308000104", "000020000", "005104800"], core.String);
-    },
-    get C44() {
-      return C[44] = dart.constList(["000000000", "009805100", "051907420", "290401065", "000000000", "140508093", "026709580", "005103600", "000000000"], core.String);
-    },
-    get C45() {
-      return C[45] = dart.constList(["020030090", "000907000", "900208005", "004806500", "607000208", "003102900", "800605007", "000309000", "030020050"], core.String);
-    },
-    get C46() {
-      return C[46] = dart.constList(["005000006", "070009020", "000500107", "804150000", "000803000", "000092805", "907006000", "030400010", "200000600"], core.String);
-    },
-    get C47() {
-      return C[47] = dart.constList(["040000050", "001943600", "009000300", "600050002", "103000506", "800020007", "005000200", "002436700", "030000040"], core.String);
-    },
-    get C48() {
-      return C[48] = dart.constList(["004000000", "000030002", "390700080", "400009001", "209801307", "600200008", "010008053", "900040000", "000000800"], core.String);
-    },
-    get C49() {
-      return C[49] = dart.constList(["360020089", "000361000", "000000000", "803000602", "400603007", "607000108", "000000000", "000418000", "970030014"], core.String);
-    },
-    get C50() {
-      return C[50] = dart.constList(["500400060", "009000800", "640020000", "000001008", "208000501", "700500000", "000090084", "003000600", "060003002"], core.String);
-    },
-    get C51() {
-      return C[51] = dart.constList(["007256400", "400000005", "010030060", "000508000", "008060200", "000107000", "030070090", "200000004", "006312700"], core.String);
-    },
-    get C52() {
-      return C[52] = dart.constList(["000000000", "079050180", "800000007", "007306800", "450708096", "003502700", "700000005", "016030420", "000000000"], core.String);
-    },
-    get C53() {
-      return C[53] = dart.constList(["030000080", "009000500", "007509200", "700105008", "020090030", "900402001", "004207100", "002000800", "070000090"], core.String);
-    },
-    get C54() {
-      return C[54] = dart.constList(["200170603", "050000100", "000006079", "000040700", "000801000", "009050000", "310400000", "005000060", "906037002"], core.String);
-    },
-    get C55() {
-      return C[55] = dart.constList(["000000080", "800701040", "040020030", "374000900", "000030000", "005000321", "010060050", "050802006", "080000000"], core.String);
-    },
-    get C56() {
-      return C[56] = dart.constList(["000000085", "000210009", "960080100", "500800016", "000000000", "890006007", "009070052", "300054000", "480000000"], core.String);
-    },
-    get C57() {
-      return C[57] = dart.constList(["608070502", "050608070", "002000300", "500090006", "040302050", "800050003", "005000200", "010704090", "409060701"], core.String);
-    },
-    get C58() {
-      return C[58] = dart.constList(["050010040", "107000602", "000905000", "208030501", "040070020", "901080406", "000401000", "304000709", "020060010"], core.String);
-    },
-    get C59() {
-      return C[59] = dart.constList(["053000790", "009753400", "100000002", "090080010", "000907000", "080030070", "500000003", "007641200", "061000940"], core.String);
-    },
-    get C60() {
-      return C[60] = dart.constList(["006080300", "049070250", "000405000", "600317004", "007000800", "100826009", "000702000", "075040190", "003090600"], core.String);
-    },
-    get C61() {
-      return C[61] = dart.constList(["005080700", "700204005", "320000084", "060105040", "008000500", "070803010", "450000091", "600508007", "003010600"], core.String);
-    },
-    get C62() {
-      return C[62] = dart.constList(["000900800", "128006400", "070800060", "800430007", "500000009", "600079008", "090004010", "003600284", "001007000"], core.String);
-    },
-    get C63() {
-      return C[63] = dart.constList(["000080000", "270000054", "095000810", "009806400", "020403060", "006905100", "017000620", "460000038", "000090000"], core.String);
-    },
-    get C64() {
-      return C[64] = dart.constList(["000602000", "400050001", "085010620", "038206710", "000000000", "019407350", "026040530", "900020007", "000809000"], core.String);
-    },
-    get C65() {
-      return C[65] = dart.constList(["380000000", "000400785", "009020300", "060090000", "800302009", "000040070", "001070500", "495006000", "000000092"], core.String);
-    },
-    get C66() {
-      return C[66] = dart.constList(["000158000", "002060800", "030000040", "027030510", "000000000", "046080790", "050000080", "004070100", "000325000"], core.String);
-    },
-    get C67() {
-      return C[67] = dart.constList(["010500200", "900001000", "002008030", "500030007", "008000500", "600080004", "040100700", "000700006", "003004050"], core.String);
-    },
-    get C68() {
-      return C[68] = dart.constList(["080000040", "000469000", "400000007", "005904600", "070608030", "008502100", "900000005", "000781000", "060000010"], core.String);
-    },
-    get C69() {
-      return C[69] = dart.constList(["904200007", "010000000", "000706500", "000800090", "020904060", "040002000", "001607000", "000000030", "300005702"], core.String);
-    },
-    get C70() {
-      return C[70] = dart.constList(["000700800", "006000031", "040002000", "024070000", "010030080", "000060290", "000800070", "860000500", "002006000"], core.String);
-    },
-    get C71() {
-      return C[71] = dart.constList(["001007090", "590080001", "030000080", "000005800", "050060020", "004100000", "080000030", "100020079", "020700400"], core.String);
-    },
-    get C72() {
-      return C[72] = dart.constList(["000003017", "015009008", "060000000", "100007000", "009000200", "000500004", "000000020", "500600340", "340200000"], core.String);
-    },
-    get C73() {
-      return C[73] = dart.constList(["300200000", "000107000", "706030500", "070009080", "900020004", "010800050", "009040301", "000702000", "000008006"], core.String);
+      return C[23] = dart.constList(["000700100", "007006830", "000300056", "000070010", "400902005", "010060000", "270001000", "069800200", "005007000"], core.String);
     },
     get C24() {
-      return C[24] = dart.constList([C[25] || CT.C25, C[26] || CT.C26, C[27] || CT.C27, C[28] || CT.C28, C[29] || CT.C29, C[30] || CT.C30, C[31] || CT.C31, C[32] || CT.C32, C[33] || CT.C33, C[34] || CT.C34, C[35] || CT.C35, C[36] || CT.C36, C[37] || CT.C37, C[38] || CT.C38, C[39] || CT.C39, C[40] || CT.C40, C[41] || CT.C41, C[42] || CT.C42, C[43] || CT.C43, C[44] || CT.C44, C[45] || CT.C45, C[46] || CT.C46, C[47] || CT.C47, C[48] || CT.C48, C[49] || CT.C49, C[50] || CT.C50, C[51] || CT.C51, C[52] || CT.C52, C[53] || CT.C53, C[54] || CT.C54, C[55] || CT.C55, C[56] || CT.C56, C[57] || CT.C57, C[58] || CT.C58, C[59] || CT.C59, C[60] || CT.C60, C[61] || CT.C61, C[62] || CT.C62, C[63] || CT.C63, C[64] || CT.C64, C[33] || CT.C33, C[65] || CT.C65, C[66] || CT.C66, C[67] || CT.C67, C[68] || CT.C68, C[69] || CT.C69, C[70] || CT.C70, C[71] || CT.C71, C[72] || CT.C72, C[73] || CT.C73], T.ListOfString());
+      return C[24] = dart.constList(["900001005", "600000140", "000058000", "500704000", "090080030", "000306008", "000460000", "024000009", "300100007"], core.String);
+    },
+    get C20() {
+      return C[20] = dart.constList([C[21] || CT.C21, C[22] || CT.C22, C[23] || CT.C23, C[24] || CT.C24], T.ListOfString());
+    },
+    get C26() {
+      return C[26] = dart.constList(["000046500", "000000900", "006003020", "003080000", "000409080", "090000060", "700090005", "240810000", "050030000"], core.String);
+    },
+    get C25() {
+      return C[25] = dart.constList([C[26] || CT.C26], T.ListOfString());
+    },
+    get C28() {
+      return C[28] = dart.constList(["000076003", "000080000", "730000010", "092000400", "007068000", "000040070", "000000000", "000257306", "400000058"], core.String);
+    },
+    get C27() {
+      return C[27] = dart.constList([C[28] || CT.C28], T.ListOfString());
+    },
+    get C30() {
+      return C[30] = dart.constList(["003020600", "900305001", "001806400", "008102900", "700000008", "006708200", "002609500", "800203009", "005010300"], core.String);
+    },
+    get C31() {
+      return C[31] = dart.constList(["200080300", "060070084", "030500209", "000105408", "000000000", "402706000", "301007040", "720040060", "004010003"], core.String);
+    },
+    get C32() {
+      return C[32] = dart.constList(["000000907", "000420180", "000705026", "100904000", "050000040", "000507009", "920108000", "034059000", "507000000"], core.String);
+    },
+    get C33() {
+      return C[33] = dart.constList(["030050040", "008010500", "460000012", "070502080", "000603000", "040109030", "250000098", "001020600", "080060020"], core.String);
+    },
+    get C34() {
+      return C[34] = dart.constList(["020810740", "700003100", "090002805", "009040087", "400208003", "160030200", "302700060", "005600008", "076051090"], core.String);
+    },
+    get C35() {
+      return C[35] = dart.constList(["100920000", "524010000", "000000070", "050008102", "000000000", "402700090", "060000000", "000030945", "000071006"], core.String);
+    },
+    get C36() {
+      return C[36] = dart.constList(["043080250", "600000000", "000001094", "900004070", "000608000", "010200003", "820500000", "000000005", "034090710"], core.String);
+    },
+    get C37() {
+      return C[37] = dart.constList(["480006902", "002008001", "900370060", "840010200", "003704100", "001060049", "020085007", "700900600", "609200018"], core.String);
+    },
+    get C38() {
+      return C[38] = dart.constList(["000900002", "050123400", "030000160", "908000000", "070000090", "000000205", "091000050", "007439020", "400007000"], core.String);
+    },
+    get C39() {
+      return C[39] = dart.constList(["001900003", "900700160", "030005007", "050000009", "004302600", "200000070", "600100030", "042007006", "500006800"], core.String);
+    },
+    get C40() {
+      return C[40] = dart.constList(["000125400", "008400000", "420800000", "030000095", "060902010", "510000060", "000003049", "000007200", "001298000"], core.String);
+    },
+    get C41() {
+      return C[41] = dart.constList(["062340750", "100005600", "570000040", "000094800", "400000006", "005830000", "030000091", "006400007", "059083260"], core.String);
+    },
+    get C42() {
+      return C[42] = dart.constList(["300000000", "005009000", "200504000", "020000700", "160000058", "704310600", "000890100", "000067080", "000005437"], core.String);
+    },
+    get C43() {
+      return C[43] = dart.constList(["630000000", "000500008", "005674000", "000020000", "003401020", "000000345", "000007004", "080300902", "947100080"], core.String);
+    },
+    get C44() {
+      return C[44] = dart.constList(["000020040", "008035000", "000070602", "031046970", "200000000", "000501203", "049000730", "000000010", "800004000"], core.String);
+    },
+    get C45() {
+      return C[45] = dart.constList(["361025900", "080960010", "400000057", "008000471", "000603000", "259000800", "740000005", "020018060", "005470329"], core.String);
+    },
+    get C46() {
+      return C[46] = dart.constList(["050807020", "600010090", "702540006", "070020301", "504000908", "103080070", "900076205", "060090003", "080103040"], core.String);
+    },
+    get C47() {
+      return C[47] = dart.constList(["080005000", "000003457", "000070809", "060400903", "007010500", "408007020", "901020000", "842300000", "000100080"], core.String);
+    },
+    get C48() {
+      return C[48] = dart.constList(["003502900", "000040000", "106000305", "900251008", "070408030", "800763001", "308000104", "000020000", "005104800"], core.String);
+    },
+    get C49() {
+      return C[49] = dart.constList(["000000000", "009805100", "051907420", "290401065", "000000000", "140508093", "026709580", "005103600", "000000000"], core.String);
+    },
+    get C50() {
+      return C[50] = dart.constList(["020030090", "000907000", "900208005", "004806500", "607000208", "003102900", "800605007", "000309000", "030020050"], core.String);
+    },
+    get C51() {
+      return C[51] = dart.constList(["005000006", "070009020", "000500107", "804150000", "000803000", "000092805", "907006000", "030400010", "200000600"], core.String);
+    },
+    get C52() {
+      return C[52] = dart.constList(["040000050", "001943600", "009000300", "600050002", "103000506", "800020007", "005000200", "002436700", "030000040"], core.String);
+    },
+    get C53() {
+      return C[53] = dart.constList(["004000000", "000030002", "390700080", "400009001", "209801307", "600200008", "010008053", "900040000", "000000800"], core.String);
+    },
+    get C54() {
+      return C[54] = dart.constList(["360020089", "000361000", "000000000", "803000602", "400603007", "607000108", "000000000", "000418000", "970030014"], core.String);
+    },
+    get C55() {
+      return C[55] = dart.constList(["500400060", "009000800", "640020000", "000001008", "208000501", "700500000", "000090084", "003000600", "060003002"], core.String);
+    },
+    get C56() {
+      return C[56] = dart.constList(["007256400", "400000005", "010030060", "000508000", "008060200", "000107000", "030070090", "200000004", "006312700"], core.String);
+    },
+    get C57() {
+      return C[57] = dart.constList(["000000000", "079050180", "800000007", "007306800", "450708096", "003502700", "700000005", "016030420", "000000000"], core.String);
+    },
+    get C58() {
+      return C[58] = dart.constList(["030000080", "009000500", "007509200", "700105008", "020090030", "900402001", "004207100", "002000800", "070000090"], core.String);
+    },
+    get C59() {
+      return C[59] = dart.constList(["200170603", "050000100", "000006079", "000040700", "000801000", "009050000", "310400000", "005000060", "906037002"], core.String);
+    },
+    get C60() {
+      return C[60] = dart.constList(["000000080", "800701040", "040020030", "374000900", "000030000", "005000321", "010060050", "050802006", "080000000"], core.String);
+    },
+    get C61() {
+      return C[61] = dart.constList(["000000085", "000210009", "960080100", "500800016", "000000000", "890006007", "009070052", "300054000", "480000000"], core.String);
+    },
+    get C62() {
+      return C[62] = dart.constList(["608070502", "050608070", "002000300", "500090006", "040302050", "800050003", "005000200", "010704090", "409060701"], core.String);
+    },
+    get C63() {
+      return C[63] = dart.constList(["050010040", "107000602", "000905000", "208030501", "040070020", "901080406", "000401000", "304000709", "020060010"], core.String);
+    },
+    get C64() {
+      return C[64] = dart.constList(["053000790", "009753400", "100000002", "090080010", "000907000", "080030070", "500000003", "007641200", "061000940"], core.String);
+    },
+    get C65() {
+      return C[65] = dart.constList(["006080300", "049070250", "000405000", "600317004", "007000800", "100826009", "000702000", "075040190", "003090600"], core.String);
+    },
+    get C66() {
+      return C[66] = dart.constList(["005080700", "700204005", "320000084", "060105040", "008000500", "070803010", "450000091", "600508007", "003010600"], core.String);
+    },
+    get C67() {
+      return C[67] = dart.constList(["000900800", "128006400", "070800060", "800430007", "500000009", "600079008", "090004010", "003600284", "001007000"], core.String);
+    },
+    get C68() {
+      return C[68] = dart.constList(["000080000", "270000054", "095000810", "009806400", "020403060", "006905100", "017000620", "460000038", "000090000"], core.String);
+    },
+    get C69() {
+      return C[69] = dart.constList(["000602000", "400050001", "085010620", "038206710", "000000000", "019407350", "026040530", "900020007", "000809000"], core.String);
+    },
+    get C70() {
+      return C[70] = dart.constList(["380000000", "000400785", "009020300", "060090000", "800302009", "000040070", "001070500", "495006000", "000000092"], core.String);
+    },
+    get C71() {
+      return C[71] = dart.constList(["000158000", "002060800", "030000040", "027030510", "000000000", "046080790", "050000080", "004070100", "000325000"], core.String);
+    },
+    get C72() {
+      return C[72] = dart.constList(["010500200", "900001000", "002008030", "500030007", "008000500", "600080004", "040100700", "000700006", "003004050"], core.String);
+    },
+    get C73() {
+      return C[73] = dart.constList(["080000040", "000469000", "400000007", "005904600", "070608030", "008502100", "900000005", "000781000", "060000010"], core.String);
     },
     get C74() {
-      return C[74] = dart.constSet(core.int, [1, 2, 3, 4, 5, 6, 7, 8, 9]);
-    },
-    get C76() {
-      return C[76] = dart.constList([0, 0], core.int);
-    },
-    get C77() {
-      return C[77] = dart.constList([0, 3], core.int);
-    },
-    get C78() {
-      return C[78] = dart.constList([0, 6], core.int);
-    },
-    get C79() {
-      return C[79] = dart.constList([3, 0], core.int);
-    },
-    get C80() {
-      return C[80] = dart.constList([3, 3], core.int);
-    },
-    get C81() {
-      return C[81] = dart.constList([3, 6], core.int);
-    },
-    get C82() {
-      return C[82] = dart.constList([6, 0], core.int);
-    },
-    get C83() {
-      return C[83] = dart.constList([6, 3], core.int);
-    },
-    get C84() {
-      return C[84] = dart.constList([6, 6], core.int);
+      return C[74] = dart.constList(["904200007", "010000000", "000706500", "000800090", "020904060", "040002000", "001607000", "000000030", "300005702"], core.String);
     },
     get C75() {
-      return C[75] = dart.constList([C[76] || CT.C76, C[77] || CT.C77, C[78] || CT.C78, C[79] || CT.C79, C[80] || CT.C80, C[81] || CT.C81, C[82] || CT.C82, C[83] || CT.C83, C[84] || CT.C84], T.ListOfint());
+      return C[75] = dart.constList(["000700800", "006000031", "040002000", "024070000", "010030080", "000060290", "000800070", "860000500", "002006000"], core.String);
+    },
+    get C76() {
+      return C[76] = dart.constList(["001007090", "590080001", "030000080", "000005800", "050060020", "004100000", "080000030", "100020079", "020700400"], core.String);
+    },
+    get C77() {
+      return C[77] = dart.constList(["000003017", "015009008", "060000000", "100007000", "009000200", "000500004", "000000020", "500600340", "340200000"], core.String);
+    },
+    get C78() {
+      return C[78] = dart.constList(["300200000", "000107000", "706030500", "070009080", "900020004", "010800050", "009040301", "000702000", "000008006"], core.String);
+    },
+    get C29() {
+      return C[29] = dart.constList([C[30] || CT.C30, C[31] || CT.C31, C[32] || CT.C32, C[33] || CT.C33, C[34] || CT.C34, C[35] || CT.C35, C[36] || CT.C36, C[37] || CT.C37, C[38] || CT.C38, C[39] || CT.C39, C[40] || CT.C40, C[41] || CT.C41, C[42] || CT.C42, C[43] || CT.C43, C[44] || CT.C44, C[45] || CT.C45, C[46] || CT.C46, C[47] || CT.C47, C[48] || CT.C48, C[49] || CT.C49, C[50] || CT.C50, C[51] || CT.C51, C[52] || CT.C52, C[53] || CT.C53, C[54] || CT.C54, C[55] || CT.C55, C[56] || CT.C56, C[57] || CT.C57, C[58] || CT.C58, C[59] || CT.C59, C[60] || CT.C60, C[61] || CT.C61, C[62] || CT.C62, C[63] || CT.C63, C[64] || CT.C64, C[65] || CT.C65, C[66] || CT.C66, C[67] || CT.C67, C[68] || CT.C68, C[69] || CT.C69, C[38] || CT.C38, C[70] || CT.C70, C[71] || CT.C71, C[72] || CT.C72, C[73] || CT.C73, C[74] || CT.C74, C[75] || CT.C75, C[76] || CT.C76, C[77] || CT.C77, C[78] || CT.C78], T.ListOfString());
+    },
+    get C79() {
+      return C[79] = dart.constSet(core.int, [1, 2, 3, 4, 5, 6, 7, 8, 9]);
+    },
+    get C81() {
+      return C[81] = dart.constList([0, 0], core.int);
+    },
+    get C82() {
+      return C[82] = dart.constList([0, 3], core.int);
+    },
+    get C83() {
+      return C[83] = dart.constList([0, 6], core.int);
+    },
+    get C84() {
+      return C[84] = dart.constList([3, 0], core.int);
+    },
+    get C85() {
+      return C[85] = dart.constList([3, 3], core.int);
+    },
+    get C86() {
+      return C[86] = dart.constList([3, 6], core.int);
+    },
+    get C87() {
+      return C[87] = dart.constList([6, 0], core.int);
+    },
+    get C88() {
+      return C[88] = dart.constList([6, 3], core.int);
+    },
+    get C89() {
+      return C[89] = dart.constList([6, 6], core.int);
+    },
+    get C80() {
+      return C[80] = dart.constList([C[81] || CT.C81, C[82] || CT.C82, C[83] || CT.C83, C[84] || CT.C84, C[85] || CT.C85, C[86] || CT.C86, C[87] || CT.C87, C[88] || CT.C88, C[89] || CT.C89], T.ListOfint());
     }
   }, false);
-  var C = Array(85).fill(void 0);
+  var C = Array(90).fill(void 0);
   var I = ["package:sudoku/sudoku.dart"];
   var _inputController = dart.privateName(sudoku, "_inputController");
   var _onKeyDown = dart.privateName(sudoku, "_onKeyDown");
@@ -508,10 +521,11 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
   var __Game__entries = dart.privateName(sudoku, "_#Game#_entries");
   var _history = dart.privateName(sudoku, "_history");
   var __Game__findings = dart.privateName(sudoku, "_#Game#_findings");
-  var __Game__invalid = dart.privateName(sudoku, "_#Game#_invalid");
+  var __Game__invalids = dart.privateName(sudoku, "_#Game#_invalids");
   var __Game__mode = dart.privateName(sudoku, "_#Game#_mode");
   var _y = dart.privateName(sudoku, "_y");
   var _x = dart.privateName(sudoku, "_x");
+  var _v = dart.privateName(sudoku, "_v");
   var _parsePuzzleIndex = dart.privateName(sudoku, "_parsePuzzleIndex");
   var _controller = dart.privateName(sudoku, "_controller");
   var _handleInput = dart.privateName(sudoku, "_handleInput");
@@ -522,16 +536,16 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
   var _puzzle = dart.privateName(sudoku, "_puzzle");
   var _entries = dart.privateName(sudoku, "_entries");
   var _findings = dart.privateName(sudoku, "_findings");
-  var _invalid = dart.privateName(sudoku, "_invalid");
+  var _invalids = dart.privateName(sudoku, "_invalids");
   var _mode = dart.privateName(sudoku, "_mode");
   var _redraw = dart.privateName(sudoku, "_redraw");
   var _handleRewind = dart.privateName(sudoku, "_handleRewind");
   var _handleEntryMode = dart.privateName(sudoku, "_handleEntryMode");
   var _handleCursor = dart.privateName(sudoku, "_handleCursor");
   var _handleToggle = dart.privateName(sudoku, "_handleToggle");
-  var _calculate = dart.privateName(sudoku, "_calculate");
+  var _handleAuto = dart.privateName(sudoku, "_handleAuto");
+  var _calc = dart.privateName(sudoku, "_calc");
   var _toggleCell = dart.privateName(sudoku, "_toggleCell");
-  var _clearFoundCell = dart.privateName(sudoku, "_clearFoundCell");
   sudoku.Game = class Game extends core.Object {
     get redraw() {
       return this[_redrawController].stream;
@@ -577,29 +591,29 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
     setByPuzzle(column, row) {
       return this[_puzzle][$_get](column)[$_get](row) != null;
     }
+    set [_findings](library$32package$58sudoku$47src$47game$46dart$58$58_findings$35param) {
+      this[__Game__findings] = library$32package$58sudoku$47src$47game$46dart$58$58_findings$35param;
+    }
     get [_findings]() {
       let t0;
       t0 = this[__Game__findings];
       return t0 == null ? dart.throw(new _internal.LateError.fieldNI("_findings")) : t0;
-    }
-    set [_findings](library$32package$58sudoku$47src$47game$46dart$58$58_findings$35param) {
-      this[__Game__findings] = library$32package$58sudoku$47src$47game$46dart$58$58_findings$35param;
     }
     found(column, row) {
       let t0, t0$;
       t0$ = (t0 = this[_findings][$_get](column), t0 == null ? null : t0[$_get](row));
       return t0$ == null ? new (T.IdentityMapOfint$Finding()).new() : t0$;
     }
-    get [_invalid]() {
+    get [_invalids]() {
       let t0;
-      t0 = this[__Game__invalid];
-      return t0 == null ? dart.throw(new _internal.LateError.fieldNI("_invalid")) : t0;
+      t0 = this[__Game__invalids];
+      return t0 == null ? dart.throw(new _internal.LateError.fieldNI("_invalids")) : t0;
     }
-    set [_invalid](library$32package$58sudoku$47src$47game$46dart$58$58_invalid$35param) {
-      this[__Game__invalid] = library$32package$58sudoku$47src$47game$46dart$58$58_invalid$35param;
+    set [_invalids](library$32package$58sudoku$47src$47game$46dart$58$58_invalids$35param) {
+      this[__Game__invalids] = library$32package$58sudoku$47src$47game$46dart$58$58_invalids$35param;
     }
     isValid(column, row) {
-      return !(this[_invalid][$containsKey](column) && dart.nullCheck(this[_invalid][$_get](column))[$containsKey](row));
+      return !(this[_invalids][$containsKey](column) && dart.nullCheck(this[_invalids][$_get](column))[$containsKey](row));
     }
     get [_mode]() {
       let t0;
@@ -618,11 +632,17 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
     get row() {
       return this[_x];
     }
+    get val() {
+      return this[_v];
+    }
     get box() {
       return sudoku.getBox(this[_y], this[_x]);
     }
     get hasCursor() {
       return this[_y] != null && this[_x] != null;
+    }
+    getValue(y, x) {
+      return y != null && x != null ? this.values[$_get](y)[$_get](x) : null;
     }
     static ['_#new#tearOff'](opts) {
       let controller = opts && 'controller' in opts ? opts.controller : null;
@@ -664,6 +684,11 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
             this[_handleToggle](sudoku.ToggleInput.as(input));
             break;
           }
+        case dart.wrapType(sudoku.AutoInput):
+          {
+            this[_handleAuto]({everything: true});
+            break;
+          }
       }
       this[_redraw]();
     }
@@ -676,7 +701,7 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
       this[_autoCandidates] = sudoku.fullCandidates();
       this[_userCandidates] = T.JSArrayOfListOfListOfSetOfint().of([sudoku.fullCandidates()]);
       this[_history] = T.JSArrayOfEntryMode().of([]);
-      this[_invalid] = new (T.IdentityMapOfint$MapOfint$bool()).new();
+      this[_invalids] = new (T.IdentityMapOfint$MapOfint$bool()).new();
       this[_redraw]();
     }
     [_handleRewind]() {
@@ -687,13 +712,13 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
           this[_userCandidates][$removeLast]();
         }
         this[_history][$removeLast]();
-        this[_calculate]({auto: false});
+        this[_calc]();
       }
     }
     [_handleEntryMode](entryModeInput) {
       this[_mode] = entryModeInput.entryMode;
       if (this[_mode] !== sudoku.EntryMode.puzzle) {
-        this[_calculate]();
+        this[_calc]();
       }
     }
     [_handleCursor](cursorInput) {
@@ -704,10 +729,39 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
         this[_y] = cursorInput.column;
         this[_x] = cursorInput.row;
       }
+      this[_v] = this.getValue(this[_y], this[_x]);
     }
     [_handleToggle](toggleInput) {
+      if (!this.hasCursor) {
+        this[_v] = this[_v] != toggleInput.value ? toggleInput.value : null;
+      }
       if (this.hasCursor) {
         this[_toggleCell](dart.nullCheck(this[_y]), dart.nullCheck(this[_x]), toggleInput.value, this[_mode]);
+        this[_calc]();
+      }
+    }
+    [_handleAuto](opts) {
+      let everything = opts && 'everything' in opts ? opts.everything : false;
+      if (this[_mode] !== sudoku.EntryMode.puzzle && this[_findings][$isNotEmpty] && this[_invalids][$isEmpty]) {
+        if (everything) {
+          for (let fy of this[_findings][$keys]) {
+            for (let fx of dart.nullCheck(this[_findings][$_get](fy))[$keys]) {
+              for (let fv of dart.nullCheck(dart.nullCheck(this[_findings][$_get](fy))[$_get](fx))[$keys]) {
+                let fm = sudoku['FindingX|get#mode'](dart.nullCheck(dart.nullCheck(dart.nullCheck(this[_findings][$_get](fy))[$_get](fx))[$_get](fv)));
+                this[_toggleCell](fy, fx, fv, fm);
+              }
+            }
+          }
+          this[_calc]();
+          this[_handleAuto]({everything: everything});
+        } else {
+          let fy = this[_findings][$keys][$first];
+          let fx = dart.nullCheck(this[_findings][$_get](fy))[$keys][$first];
+          let fv = dart.nullCheck(dart.nullCheck(this[_findings][$_get](fy))[$_get](fx))[$keys][$first];
+          let fm = sudoku['FindingX|get#mode'](dart.nullCheck(dart.nullCheck(dart.nullCheck(this[_findings][$_get](fy))[$_get](fx))[$_get](fv)));
+          this[_toggleCell](fy, fx, fv, fm);
+          this[_calc]();
+        }
       }
     }
     [_toggleCell](cellY, cellX, value, mode) {
@@ -730,20 +784,12 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
           })()));
         }
         this[_history][$add](mode);
-        this[_calculate]();
       }
-      this[_redraw]();
     }
-    [_calculate](opts) {
-      let auto = opts && 'auto' in opts ? opts.auto : true;
-      this[_autoCandidates] = sudoku.findCandidates(this.values);
-      this[_findings] = sudoku.findValues(this.values, this.candidates);
-      this[_invalid] = sudoku.validate(this.values, this.candidates);
-    }
-    [_clearFoundCell](cellY, cellX, value, mode) {
-      return async.async(dart.dynamic, (function* _clearFoundCell() {
-        html.window[$requestAnimationFrame](dart.fn(_ => this[_toggleCell](cellY, cellX, value, mode), T.numTovoid()));
-      }).bind(this));
+    [_calc]() {
+      this[_autoCandidates] = sudoku.calcAutoCandidates(this.values);
+      this[_findings] = sudoku.calcFindings(this.values, this.candidates);
+      this[_invalids] = sudoku.calcInvalids(this.values, this.candidates);
     }
   };
   (sudoku.Game.new = function(opts) {
@@ -755,11 +801,12 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
     this[__Game__entries] = null;
     this[_history] = T.JSArrayOfEntryMode().of([]);
     this[__Game__findings] = null;
-    this[__Game__invalid] = null;
+    this[__Game__invalids] = null;
     this[__Game__mode] = null;
     this[_y] = null;
     this[_x] = null;
-    this[_parsePuzzleIndex] = 2;
+    this[_v] = null;
+    this[_parsePuzzleIndex] = 0;
     this[_controller] = controller;
     this[_controller].input.listen(dart.bind(this, _handleInput));
     this[_initPuzzle]();
@@ -772,6 +819,7 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
     setByPuzzle: dart.fnType(core.bool, [core.int, core.int]),
     found: dart.fnType(core.Map$(core.int, sudoku.Finding), [core.int, core.int]),
     isValid: dart.fnType(core.bool, [core.int, core.int]),
+    getValue: dart.fnType(dart.nullable(core.int), [dart.nullable(core.int), dart.nullable(core.int)]),
     [_loadNextPuzzle]: dart.fnType(dart.void, []),
     [_redraw]: dart.fnType(dart.dynamic, []),
     [_handleInput]: dart.fnType(dart.void, [sudoku.Input]),
@@ -780,9 +828,9 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
     [_handleEntryMode]: dart.fnType(dart.void, [sudoku.EntryModeInput]),
     [_handleCursor]: dart.fnType(dart.void, [sudoku.CursorInput]),
     [_handleToggle]: dart.fnType(dart.void, [sudoku.ToggleInput]),
+    [_handleAuto]: dart.fnType(dart.void, [], {everything: core.bool}, {}),
     [_toggleCell]: dart.fnType(dart.void, [core.int, core.int, dart.nullable(core.int), sudoku.EntryMode]),
-    [_calculate]: dart.fnType(dart.void, [], {auto: core.bool}, {}),
-    [_clearFoundCell]: dart.fnType(async.Future, [core.int, core.int, core.int, sudoku.EntryMode])
+    [_calc]: dart.fnType(dart.void, [])
   }));
   dart.setGetterSignature(sudoku.Game, () => ({
     __proto__: dart.getGetters(sudoku.Game.__proto__),
@@ -794,11 +842,12 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
     [_entries]: core.List$(core.List$(core.List$(dart.nullable(core.int)))),
     values: core.List$(core.List$(dart.nullable(core.int))),
     [_findings]: core.Map$(core.int, core.Map$(core.int, core.Map$(core.int, sudoku.Finding))),
-    [_invalid]: core.Map$(core.int, core.Map$(core.int, core.bool)),
+    [_invalids]: core.Map$(core.int, core.Map$(core.int, core.bool)),
     [_mode]: sudoku.EntryMode,
     mode: sudoku.EntryMode,
     column: dart.nullable(core.int),
     row: dart.nullable(core.int),
+    val: dart.nullable(core.int),
     box: dart.nullable(core.int),
     hasCursor: core.bool
   }));
@@ -809,7 +858,7 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
     [_puzzle]: core.List$(core.List$(dart.nullable(core.int))),
     [_entries]: core.List$(core.List$(core.List$(dart.nullable(core.int)))),
     [_findings]: core.Map$(core.int, core.Map$(core.int, core.Map$(core.int, sudoku.Finding))),
-    [_invalid]: core.Map$(core.int, core.Map$(core.int, core.bool)),
+    [_invalids]: core.Map$(core.int, core.Map$(core.int, core.bool)),
     [_mode]: sudoku.EntryMode
   }));
   dart.setLibraryUri(sudoku.Game, I[0]);
@@ -823,10 +872,11 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
     [__Game__entries]: dart.fieldType(dart.nullable(core.List$(core.List$(core.List$(dart.nullable(core.int)))))),
     [_history]: dart.fieldType(core.List$(sudoku.EntryMode)),
     [__Game__findings]: dart.fieldType(dart.nullable(core.Map$(core.int, core.Map$(core.int, core.Map$(core.int, sudoku.Finding))))),
-    [__Game__invalid]: dart.fieldType(dart.nullable(core.Map$(core.int, core.Map$(core.int, core.bool)))),
+    [__Game__invalids]: dart.fieldType(dart.nullable(core.Map$(core.int, core.Map$(core.int, core.bool)))),
     [__Game__mode]: dart.fieldType(dart.nullable(sudoku.EntryMode)),
     [_y]: dart.fieldType(dart.nullable(core.int)),
     [_x]: dart.fieldType(dart.nullable(core.int)),
+    [_v]: dart.fieldType(dart.nullable(core.int)),
     [_parsePuzzleIndex]: dart.fieldType(core.int)
   }));
   sudoku.Input = class Input extends core.Object {
@@ -868,12 +918,18 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
       let value = opts && 'value' in opts ? opts.value : null;
       return sudoku.Input.toggle({value: value});
     }
+    static auto() {
+      return new sudoku.AutoInput.new();
+    }
+    static ['_#auto#tearOff']() {
+      return sudoku.Input.auto();
+    }
   };
   (sudoku.Input[dart.mixinNew] = function() {
   }).prototype = sudoku.Input.prototype;
   dart.addTypeTests(sudoku.Input);
   dart.addTypeCaches(sudoku.Input);
-  dart.setStaticMethodSignature(sudoku.Input, () => ['reset', 'rewind', 'entryMode', 'cursor', 'toggle']);
+  dart.setStaticMethodSignature(sudoku.Input, () => ['reset', 'rewind', 'entryMode', 'cursor', 'toggle', 'auto']);
   dart.setLibraryUri(sudoku.Input, I[0]);
   sudoku.ResetInput = class ResetInput extends core.Object {
     static ['_#new#tearOff']() {
@@ -989,6 +1045,18 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
     __proto__: dart.getFields(sudoku.ToggleInput.__proto__),
     value: dart.finalFieldType(dart.nullable(core.int))
   }));
+  sudoku.AutoInput = class AutoInput extends core.Object {
+    static ['_#new#tearOff']() {
+      return new sudoku.AutoInput.new();
+    }
+  };
+  (sudoku.AutoInput.new = function() {
+    ;
+  }).prototype = sudoku.AutoInput.prototype;
+  dart.addTypeTests(sudoku.AutoInput);
+  dart.addTypeCaches(sudoku.AutoInput);
+  sudoku.AutoInput[dart.implements] = () => [sudoku.Input];
+  dart.setLibraryUri(sudoku.AutoInput, I[0]);
   var _game = dart.privateName(sudoku, "_game");
   var _cellClassName = dart.privateName(sudoku, "_cellClassName");
   var _cellInnerHtml = dart.privateName(sudoku, "_cellInnerHtml");
@@ -1046,7 +1114,7 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
     }
     [_cellClassName](c, r, value) {
       let classes = T.JSArrayOfString().of(["tile"]);
-      if (c === this[_game].column && r === this[_game].row) {
+      if (this[_game].val != null && this[_game].val == this[_game].getValue(c, r) || c === this[_game].column && r === this[_game].row) {
         classes[$add]("selected");
       } else if (c === this[_game].column || r === this[_game].row || this[_game].box == sudoku.getBox(c, r)) {
         classes[$add]("related");
@@ -1378,7 +1446,7 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
   sudoku['FindingsX|get#combine'] = function FindingsX$124get$35combine($this) {
     return dart.fn(other => sudoku['FindingsX|combine']($this, other), T.MapOfint$MapOfint$MapOfint$FindingTovoid());
   };
-  sudoku.validate = function validate(values, candidates) {
+  sudoku.calcInvalids = function calcInvalids(values, candidates) {
     let invalid = new (T.IdentityMapOfint$MapOfint$bool()).new();
     sudoku.scan(dart.fn((y, x) => {
       let value = values[$_get](y)[$_get](x);
@@ -1410,7 +1478,7 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
     }, T.intAndintToNull()));
     return invalid;
   };
-  sudoku.findCandidates = function findCandidates(values) {
+  sudoku.calcAutoCandidates = function calcAutoCandidates(values) {
     let candidates = sudoku.fullCandidates();
     sudoku.scan(dart.fn((y, x) => {
       if (values[$_get](y)[$_get](x) != null) {
@@ -1422,11 +1490,15 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
     }, T.intAndintToNull()));
     return candidates;
   };
-  sudoku.findValues = function findValues(values, candidates) {
+  sudoku.calcFindings = function calcFindings(values, candidates) {
     let findings = new (T.IdentityMapOfint$MapOfint$MapOfint$Finding()).new();
-    sudoku['FindingsX|combine'](findings, sudoku.findForcedOutCandidates(values, candidates));
     sudoku['FindingsX|combine'](findings, sudoku.findLastStandingValues(values, candidates));
-    sudoku['FindingsX|combine'](findings, sudoku.findNeededElsewhereCandidates(values, candidates));
+    if (findings[$isEmpty]) {
+      sudoku['FindingsX|combine'](findings, sudoku.findForcedOutCandidates(values, candidates));
+    }
+    if (findings[$isEmpty]) {
+      sudoku['FindingsX|combine'](findings, sudoku.findNeededElsewhereCandidates(values, candidates));
+    }
     return findings;
   };
   sudoku.findNeededElsewhereCandidates = function findNeededElsewhereCandidates(values, candidates) {
@@ -1456,7 +1528,6 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
                       dart.nullCheck(dart.nullCheck(findings[$_get](y))[$_get](x))[$_set](value, sudoku.Finding.neededElsewhere);
                     }
                   }
-                } else {
                 }
               }, T.intAndintToNull()));
             }
@@ -1472,14 +1543,12 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
   };
   sudoku.findForcedOutCandidates = function findForcedOutCandidates(values, candidates) {
     let findings = new (T.IdentityMapOfint$MapOfint$MapOfint$Finding()).new();
-    sudoku.scan(dart.fn((y, x) => {
-      let by = y * 3;
-      let bx = x * 3;
+    sudoku.scanLine(dart.fn(i => {
       let valueYs = new (T.IdentityMapOfint$SetOfint()).new();
       let valueXs = new (T.IdentityMapOfint$SetOfint()).new();
       let scanYs = T.LinkedHashSetOfint().new();
       let scanXs = T.LinkedHashSetOfint().new();
-      sudoku.scanBox(by, bx, dart.fn((iy, ix) => {
+      sudoku.scanIthBox(i, dart.fn((iy, ix) => {
         scanYs.add(iy);
         scanXs.add(ix);
         if (values[$_get](iy)[$_get](ix) == null) {
@@ -1494,7 +1563,7 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
       valueYs[$forEach](dart.fn((value, vy) => {
         if (vy[$length] === 1) {
           sudoku.scanRow(vy[$first], dart.nullCheck(valueXs[$_get](value))[$first], dart.fn((iy, ix) => {
-            if (!scanXs.contains(ix) && candidates[$_get](iy)[$_get](ix).contains(value)) {
+            if (values[$_get](iy)[$_get](ix) == null && !scanXs.contains(ix) && candidates[$_get](iy)[$_get](ix).contains(value)) {
               findings[$putIfAbsent](iy, dart.fn(() => new (T.IdentityMapOfint$MapOfint$Finding()).new(), T.VoidToMapOfint$MapOfint$Finding()));
               dart.nullCheck(findings[$_get](iy))[$putIfAbsent](ix, dart.fn(() => new (T.IdentityMapOfint$Finding()).new(), T.VoidToMapOfint$Finding()));
               dart.nullCheck(dart.nullCheck(findings[$_get](iy))[$_get](ix))[$_set](value, sudoku.Finding.forcedOut);
@@ -1505,7 +1574,7 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
       valueXs[$forEach](dart.fn((value, vx) => {
         if (vx[$length] === 1) {
           sudoku.scanColumn(dart.nullCheck(valueYs[$_get](value))[$first], vx[$first], dart.fn((iy, ix) => {
-            if (!scanYs.contains(iy) && candidates[$_get](iy)[$_get](ix).contains(value)) {
+            if (values[$_get](iy)[$_get](ix) == null && !scanYs.contains(iy) && candidates[$_get](iy)[$_get](ix).contains(value)) {
               findings[$putIfAbsent](iy, dart.fn(() => new (T.IdentityMapOfint$MapOfint$Finding()).new(), T.VoidToMapOfint$MapOfint$Finding()));
               dart.nullCheck(findings[$_get](iy))[$putIfAbsent](ix, dart.fn(() => new (T.IdentityMapOfint$Finding()).new(), T.VoidToMapOfint$Finding()));
               dart.nullCheck(dart.nullCheck(findings[$_get](iy))[$_get](ix))[$_set](value, sudoku.Finding.forcedOut);
@@ -1513,7 +1582,7 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
           }, T.intAndintToNull()));
         }
       }, T.intAndSetOfintTovoid()));
-    }, T.intAndintToNull()), {size: 3});
+    }, T.intToNull()));
     return findings;
   };
   sudoku.findLastStandingValues = function findLastStandingValues(values, candidates) {
@@ -1591,7 +1660,7 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
   };
   dart.defineLazy(sudoku, {
     /*sudoku.bindings*/get bindings() {
-      return new (T.IdentityMapOfint$Input()).from([27, sudoku.Input.reset(), 8, sudoku.Input.rewind(), 13, sudoku.Input.entryMode(sudoku.EntryMode.value), 38, sudoku.Input.cursor({move: sudoku.Move.up}), 40, sudoku.Input.cursor({move: sudoku.Move.down}), 37, sudoku.Input.cursor({move: sudoku.Move.left}), 39, sudoku.Input.cursor({move: sudoku.Move.right}), 87, sudoku.Input.cursor({move: sudoku.Move.up}), 83, sudoku.Input.cursor({move: sudoku.Move.down}), 65, sudoku.Input.cursor({move: sudoku.Move.left}), 68, sudoku.Input.cursor({move: sudoku.Move.right}), 49, sudoku.Input.toggle({value: 1}), 50, sudoku.Input.toggle({value: 2}), 51, sudoku.Input.toggle({value: 3}), 52, sudoku.Input.toggle({value: 4}), 53, sudoku.Input.toggle({value: 5}), 54, sudoku.Input.toggle({value: 6}), 55, sudoku.Input.toggle({value: 7}), 56, sudoku.Input.toggle({value: 8}), 57, sudoku.Input.toggle({value: 9}), 67, sudoku.Input.entryMode(sudoku.EntryMode.candidate), 86, sudoku.Input.entryMode(sudoku.EntryMode.value)]);
+      return new (T.IdentityMapOfint$Input()).from([27, sudoku.Input.reset(), 8, sudoku.Input.rewind(), 13, sudoku.Input.entryMode(sudoku.EntryMode.value), 38, sudoku.Input.cursor({move: sudoku.Move.up}), 40, sudoku.Input.cursor({move: sudoku.Move.down}), 37, sudoku.Input.cursor({move: sudoku.Move.left}), 39, sudoku.Input.cursor({move: sudoku.Move.right}), 87, sudoku.Input.cursor({move: sudoku.Move.up}), 83, sudoku.Input.cursor({move: sudoku.Move.down}), 65, sudoku.Input.cursor({move: sudoku.Move.left}), 68, sudoku.Input.cursor({move: sudoku.Move.right}), 49, sudoku.Input.toggle({value: 1}), 50, sudoku.Input.toggle({value: 2}), 51, sudoku.Input.toggle({value: 3}), 52, sudoku.Input.toggle({value: 4}), 53, sudoku.Input.toggle({value: 5}), 54, sudoku.Input.toggle({value: 6}), 55, sudoku.Input.toggle({value: 7}), 56, sudoku.Input.toggle({value: 8}), 57, sudoku.Input.toggle({value: 9}), 97, sudoku.Input.toggle({value: 1}), 98, sudoku.Input.toggle({value: 2}), 99, sudoku.Input.toggle({value: 3}), 100, sudoku.Input.toggle({value: 4}), 101, sudoku.Input.toggle({value: 5}), 102, sudoku.Input.toggle({value: 6}), 103, sudoku.Input.toggle({value: 7}), 104, sudoku.Input.toggle({value: 8}), 105, sudoku.Input.toggle({value: 9}), 67, sudoku.Input.entryMode(sudoku.EntryMode.candidate), 86, sudoku.Input.entryMode(sudoku.EntryMode.value), 80, sudoku.Input.auto()]);
     },
     set bindings(_) {},
     /*sudoku.keyIds*/get keyIds() {
@@ -1600,30 +1669,30 @@ define(['dart_sdk'], (function load__packages__sudoku__sudoku(dart_sdk) {
     /*sudoku.hardPuzzle*/get hardPuzzle() {
       return T.JSArrayOfInput().of([sudoku.Input.cursor({column: 0, row: 4}), sudoku.Input.toggle({value: 7}), sudoku.Input.cursor({column: 0, row: 5}), sudoku.Input.toggle({value: 6}), sudoku.Input.cursor({column: 0, row: 8}), sudoku.Input.toggle({value: 3}), sudoku.Input.cursor({column: 1, row: 4}), sudoku.Input.toggle({value: 8}), sudoku.Input.cursor({column: 2, row: 0}), sudoku.Input.toggle({value: 7}), sudoku.Input.cursor({column: 2, row: 1}), sudoku.Input.toggle({value: 3}), sudoku.Input.cursor({column: 2, row: 7}), sudoku.Input.toggle({value: 1}), sudoku.Input.cursor({column: 3, row: 1}), sudoku.Input.toggle({value: 9}), sudoku.Input.cursor({column: 3, row: 2}), sudoku.Input.toggle({value: 2}), sudoku.Input.cursor({column: 3, row: 6}), sudoku.Input.toggle({value: 4}), sudoku.Input.cursor({column: 4, row: 2}), sudoku.Input.toggle({value: 7}), sudoku.Input.cursor({column: 4, row: 4}), sudoku.Input.toggle({value: 6}), sudoku.Input.cursor({column: 4, row: 5}), sudoku.Input.toggle({value: 8}), sudoku.Input.cursor({column: 5, row: 4}), sudoku.Input.toggle({value: 4}), sudoku.Input.cursor({column: 5, row: 7}), sudoku.Input.toggle({value: 7}), sudoku.Input.cursor({column: 7, row: 3}), sudoku.Input.toggle({value: 2}), sudoku.Input.cursor({column: 7, row: 4}), sudoku.Input.toggle({value: 5}), sudoku.Input.cursor({column: 7, row: 5}), sudoku.Input.toggle({value: 7}), sudoku.Input.cursor({column: 7, row: 6}), sudoku.Input.toggle({value: 3}), sudoku.Input.cursor({column: 7, row: 8}), sudoku.Input.toggle({value: 6}), sudoku.Input.cursor({column: 8, row: 0}), sudoku.Input.toggle({value: 4}), sudoku.Input.cursor({column: 8, row: 7}), sudoku.Input.toggle({value: 5}), sudoku.Input.cursor({column: 8, row: 8}), sudoku.Input.toggle({value: 8}), sudoku.Input.entryMode(sudoku.EntryMode.value), sudoku.Input.cursor()]);
     },
-    /*sudoku.expertPuzzle*/get expertPuzzle() {
-      return T.JSArrayOfInput().of([sudoku.Input.cursor({column: 0, row: 4}), sudoku.Input.toggle({value: 4}), sudoku.Input.cursor({column: 0, row: 5}), sudoku.Input.toggle({value: 6}), sudoku.Input.cursor({column: 0, row: 6}), sudoku.Input.toggle({value: 5}), sudoku.Input.cursor({column: 1, row: 6}), sudoku.Input.toggle({value: 9}), sudoku.Input.cursor({column: 2, row: 2}), sudoku.Input.toggle({value: 6}), sudoku.Input.cursor({column: 2, row: 5}), sudoku.Input.toggle({value: 3}), sudoku.Input.cursor({column: 2, row: 7}), sudoku.Input.toggle({value: 2}), sudoku.Input.cursor({column: 3, row: 2}), sudoku.Input.toggle({value: 3}), sudoku.Input.cursor({column: 3, row: 4}), sudoku.Input.toggle({value: 8}), sudoku.Input.cursor({column: 4, row: 3}), sudoku.Input.toggle({value: 4}), sudoku.Input.cursor({column: 4, row: 5}), sudoku.Input.toggle({value: 9}), sudoku.Input.cursor({column: 4, row: 7}), sudoku.Input.toggle({value: 8}), sudoku.Input.cursor({column: 5, row: 1}), sudoku.Input.toggle({value: 9}), sudoku.Input.cursor({column: 5, row: 7}), sudoku.Input.toggle({value: 6}), sudoku.Input.cursor({column: 6, row: 0}), sudoku.Input.toggle({value: 7}), sudoku.Input.cursor({column: 6, row: 4}), sudoku.Input.toggle({value: 9}), sudoku.Input.cursor({column: 6, row: 8}), sudoku.Input.toggle({value: 5}), sudoku.Input.cursor({column: 7, row: 0}), sudoku.Input.toggle({value: 2}), sudoku.Input.cursor({column: 7, row: 1}), sudoku.Input.toggle({value: 4}), sudoku.Input.cursor({column: 7, row: 3}), sudoku.Input.toggle({value: 8}), sudoku.Input.cursor({column: 7, row: 4}), sudoku.Input.toggle({value: 1}), sudoku.Input.cursor({column: 8, row: 1}), sudoku.Input.toggle({value: 5}), sudoku.Input.cursor({column: 8, row: 4}), sudoku.Input.toggle({value: 3}), sudoku.Input.entryMode(sudoku.EntryMode.value), sudoku.Input.cursor()]);
-    },
-    /*sudoku.evilPuzzle*/get evilPuzzle() {
-      return T.JSArrayOfInput().of([sudoku.Input.cursor({column: 0, row: 1}), sudoku.Input.toggle({value: 8}), sudoku.Input.cursor({column: 0, row: 2}), sudoku.Input.toggle({value: 6}), sudoku.Input.cursor({column: 0, row: 4}), sudoku.Input.toggle({value: 1}), sudoku.Input.cursor({column: 0, row: 7}), sudoku.Input.toggle({value: 4}), sudoku.Input.cursor({column: 0, row: 8}), sudoku.Input.toggle({value: 7}), sudoku.Input.cursor({column: 1, row: 2}), sudoku.Input.toggle({value: 1}), sudoku.Input.cursor({column: 1, row: 3}), sudoku.Input.toggle({value: 5}), sudoku.Input.cursor({column: 2, row: 8}), sudoku.Input.toggle({value: 2}), sudoku.Input.cursor({column: 3, row: 1}), sudoku.Input.toggle({value: 6}), sudoku.Input.cursor({column: 3, row: 6}), sudoku.Input.toggle({value: 5}), sudoku.Input.cursor({column: 4, row: 4}), sudoku.Input.toggle({value: 4}), sudoku.Input.cursor({column: 4, row: 6}), sudoku.Input.toggle({value: 2}), sudoku.Input.cursor({column: 5, row: 0}), sudoku.Input.toggle({value: 7}), sudoku.Input.cursor({column: 5, row: 3}), sudoku.Input.toggle({value: 9}), sudoku.Input.cursor({column: 5, row: 7}), sudoku.Input.toggle({value: 6}), sudoku.Input.cursor({column: 5, row: 8}), sudoku.Input.toggle({value: 4}), sudoku.Input.cursor({column: 6, row: 1}), sudoku.Input.toggle({value: 7}), sudoku.Input.cursor({column: 6, row: 4}), sudoku.Input.toggle({value: 5}), sudoku.Input.cursor({column: 6, row: 7}), sudoku.Input.toggle({value: 8}), sudoku.Input.cursor({column: 6, row: 8}), sudoku.Input.toggle({value: 1}), sudoku.Input.cursor({column: 7, row: 6}), sudoku.Input.toggle({value: 6}), sudoku.Input.cursor({column: 8, row: 0}), sudoku.Input.toggle({value: 9}), sudoku.Input.cursor({column: 8, row: 5}), sudoku.Input.toggle({value: 3}), sudoku.Input.entryMode(sudoku.EntryMode.value), sudoku.Input.cursor()]);
-    },
     /*sudoku.evilPuzzles*/get evilPuzzles() {
       return C[20] || CT.C20;
     },
+    /*sudoku.expertPuzzles*/get expertPuzzles() {
+      return C[25] || CT.C25;
+    },
+    /*sudoku.hardPuzzles*/get hardPuzzles() {
+      return C[27] || CT.C27;
+    },
     /*sudoku.easyPuzzles*/get easyPuzzles() {
-      return C[24] || CT.C24;
+      return C[29] || CT.C29;
     },
     /*sudoku.possibleValues*/get possibleValues() {
-      return C[74] || CT.C74;
+      return C[79] || CT.C79;
     },
     /*sudoku._boxOrigins*/get _boxOrigins() {
-      return C[75] || CT.C75;
+      return C[80] || CT.C80;
     }
   }, false);
   dart.trackLibraries("packages/sudoku/sudoku", {
     "package:sudoku/sudoku.dart": sudoku
   }, {
     "package:sudoku/sudoku.dart": ["src/controller.dart", "src/game.dart", "src/input.dart", "src/puzzles.dart", "src/renderer.dart", "src/util.dart"]
-  }, '{"version":3,"sourceRoot":"","sources":["src/controller.dart","src/game.dart","src/input.dart","src/renderer.dart","src/util.dart","src/puzzles.dart"],"names":[],"mappings":"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","file":"sudoku.sound.ddc.js"}');
+  }, '{"version":3,"sourceRoot":"","sources":["src/controller.dart","src/game.dart","src/input.dart","src/renderer.dart","src/util.dart","src/puzzles.dart"],"names":[],"mappings":"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","file":"sudoku.sound.ddc.js"}');
   // Exports:
   return {
     sudoku: sudoku

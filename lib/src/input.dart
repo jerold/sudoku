@@ -6,6 +6,7 @@ abstract class Input {
   factory Input.entryMode(EntryMode mode) => EntryModeInput(mode);
   factory Input.cursor({int? column, int? row, Move? move}) => CursorInput(column, row, move);
   factory Input.toggle({int? value}) => ToggleInput(value);
+  factory Input.auto() => AutoInput();
 }
 
 class ResetInput implements Input {}
@@ -27,3 +28,5 @@ class ToggleInput implements Input {
   ToggleInput(this.value);
   final int? value;
 }
+
+class AutoInput implements Input {}
