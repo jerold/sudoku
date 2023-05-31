@@ -30,25 +30,28 @@ class Renderer {
     }
   }
 
-  String _cellInnerHtml(int c, int r, int? value, Set<int> candidates) {
+  String _cellInnerHtml(int y, int x, int? value, Set<int> candidates) {
     if (value != null) {
       return '$value';
     } else if (_game.mode == EntryMode.puzzle) {
       return '';
     } else {
-      final findings = _game.found(c, r);
+      final cursorVal = _game.cursorV;
+      final findings = _game.found(y, x);
       var candidateHtml = '';
       for (final value in possibleValues) {
         final contents = candidates.contains(value) ? '$value' : '';
-        candidateHtml += '<div class="${_candidateClassName(value, findings)}">$contents</div>';
+        candidateHtml += '<div class="${_candidateClassName(value, cursorVal, findings)}">$contents</div>';
       }
       return candidateHtml;
     }
   }
 
-  String _candidateClassName(int value, Map<int, Finding> findings) {
+  String _candidateClassName(int value, int? cursorVal, Map<int, Finding> findings) {
     if (findings.containsKey(value)) {
       return findings[value]!.className;
+    } else if (value == cursorVal) {
+      return 'selected';
     }
     return '';
   }

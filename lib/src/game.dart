@@ -134,7 +134,7 @@ class Game {
     }
 
     _v = getValue(_y, _x);
-    print('[$_y][$_x][$_v]');
+    // print('[$_y][$_x][$_v]');
   }
 
   void _handleToggle(ToggleInput toggleInput) {
@@ -188,8 +188,7 @@ class Game {
 
   void _calc() {
     _autoCandidates = calcAutoCandidates(values);
-    _findings = calcFindings(values, candidates);
+    _findings = calcFindings(values, candidates); // ..debug();
     _invalids = calcInvalids(values, candidates);
-    _findings.debug();
   }
 }

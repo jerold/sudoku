@@ -16,6 +16,7 @@
   --color-hint-needed-elsewhere: #a031c8;
   --color-warn: #C84B31;
   --color-candidate: #6f645d;
+  --color-candidate-selected: #a7eec9;
 
   --tile-border-width: 1px;
 
@@ -105,6 +106,10 @@ body {
 
 .forced-out {
   color: var(--color-hint-forced-out) !important;
+}
+
+.candidates .selected {
+  color: var(--color-candidate-selected) !important;
 }
 
 .tile {
