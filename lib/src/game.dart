@@ -29,13 +29,13 @@ class Game {
   EntryMode get mode => _mode;
 
   int? _y;
-  int? get column => _y;
+  int? get cursorY => _y;
 
   int? _x;
-  int? get row => _x;
+  int? get cursorX => _x;
 
   int? _v;
-  int? get val => _v;
+  int? get cursorV => _v;
 
   int? get box => getBox(_y, _x);
 
@@ -46,16 +46,14 @@ class Game {
     _controller.input.listen(_handleInput);
     _initPuzzle();
 
-    // hardPuzzle.forEach(_handleInput);
-    _loadNextPuzzle();
+    final rand = Random();
+    _loadPuzzle(rand.nextInt(evilPuzzles.length));
   }
 
-  var _parsePuzzleIndex = 0;
-  void _loadNextPuzzle() {
-    print('Puzzle($_parsePuzzleIndex)');
+  void _loadPuzzle(int index) {
+    print('Puzzle($index)');
     _initPuzzle();
-    parsedPuzzle(_parsePuzzleIndex, evilPuzzles).forEach(_handleInput);
-    _parsePuzzleIndex++;
+    parsedPuzzle(index, evilPuzzles).forEach(_handleInput);
   }
 
   _redraw() => _redrawController.add(_puzzle);
@@ -78,7 +76,7 @@ class Game {
         _handleToggle(input as ToggleInput);
         break;
       case AutoInput:
-        _handleAuto(everything: true);
+        _handleAuto(everything: false);
         break;
     }
     _redraw();
@@ -136,6 +134,7 @@ class Game {
     }
 
     _v = getValue(_y, _x);
+    print('[$_y][$_x][$_v]');
   }
 
   void _handleToggle(ToggleInput toggleInput) {
@@ -191,5 +190,6 @@ class Game {
     _autoCandidates = calcAutoCandidates(values);
     _findings = calcFindings(values, candidates);
     _invalids = calcInvalids(values, candidates);
+    _findings.debug();
   }
 }

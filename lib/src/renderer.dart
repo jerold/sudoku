@@ -15,10 +15,10 @@ class Renderer {
     final candidates = _game.candidates;
     var i = 0;
     final children = _boardElement.children;
-    for (int c = 0; c < values.length; c++) {
-      for (int r = 0; r < values[c].length; r++) {
-        final newClasses = _cellClassName(c, r, values[c][r]);
-        final newInnerHtml = _cellInnerHtml(c, r, values[c][r], candidates[c][r]);
+    for (int y = 0; y < values.length; y++) {
+      for (int x = 0; x < values[y].length; x++) {
+        final newClasses = _cellClassName(y, x, values[y][x]);
+        final newInnerHtml = _cellInnerHtml(y, x, values[y][x], candidates[y][x]);
         if (children[i].className != newClasses || children[i].innerHtml != newInnerHtml) {
           children[i]
             ..className = newClasses
@@ -53,19 +53,19 @@ class Renderer {
     return '';
   }
 
-  String _cellClassName(int c, int r, int? value) {
+  String _cellClassName(int y, int x, int? v) {
     var classes = <String>['tile'];
-    if ((_game.val != null && _game.val == _game.getValue(c, r)) || (c == _game.column && r == _game.row)) {
+    if ((_game.cursorV != null && _game.cursorV == v) || (y == _game.cursorY && x == _game.cursorX)) {
       classes.add('selected');
-    } else if (c == _game.column || r == _game.row || _game.box == getBox(c, r)) {
+    } else if (y == _game.cursorY || x == _game.cursorX || _game.box == getBox(y, x)) {
       classes.add('related');
     }
-    if (!_game.isValid(c, r)) {
+    if (!_game.isValid(y, x)) {
       classes.add('invalid');
     }
-    if (value == null) {
+    if (v == null) {
       classes.add('candidates');
-    } else if (_game.setByPuzzle(c, r)) {
+    } else if (_game.setByPuzzle(y, x)) {
       classes.add('puzzle');
     }
     return classes.join(' ');

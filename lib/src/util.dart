@@ -142,6 +142,17 @@ extension FindingsX on Map<int, Map<int, Map<int, Finding>>> {
       }
     }
   }
+
+  void debug() {
+    print('Findings:');
+    for (final y in keys) {
+      for (final x in this[y]!.keys) {
+        for (final v in this[y]![x]!.keys) {
+          print('[$y][$x][$v] = ${this[y]![x]![v]}');
+        }
+      }
+    }
+  }
 }
 
 // find any values that conflict with
@@ -236,7 +247,7 @@ Map<int, Map<int, Map<int, Finding>>> findNeededElsewhereCandidates(
             ithIterator(i, (y, x) {
               if (setKey != candidates[y][x].toString()) {
                 for (final value in candidatesNeededElsewhere) {
-                  if (candidates[y][x].contains(value)) {
+                  if (values[y][x] == null && candidates[y][x].contains(value)) {
                     findings.putIfAbsent(y, () => <int, Map<int, Finding>>{});
                     findings[y]!.putIfAbsent(x, () => <int, Finding>{});
                     findings[y]![x]![value] = Finding.neededElsewhere;

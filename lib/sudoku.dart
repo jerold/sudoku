@@ -2,6 +2,7 @@ library sudoku;
 
 import 'dart:async';
 import 'dart:html';
+import 'dart:math';
 
 part 'src/controller.dart';
 part 'src/game.dart';
