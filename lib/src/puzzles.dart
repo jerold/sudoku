@@ -13,7 +13,7 @@ List<Input> parsedPuzzle(int i, List<List<String>> puzzleList) {
       inputs.add(Input.toggle(value: puzzle[y][x]));
     }
   });
-  inputs.add(Input.entryMode(EntryMode.value));
+  inputs.add(Input.mode(Mode.entry));
   inputs.add(Input.cursor());
   return inputs;
 }

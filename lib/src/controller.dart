@@ -5,8 +5,11 @@ Map<int, Input> bindings = {
   KeyCode.ESC: Input.reset(),
   // rewind value
   KeyCode.BACKSPACE: Input.rewind(),
+  188: Input.rewind(), // <
+  // auto value
+  190: Input.auto(), // >
   // finish editing puzzle
-  KeyCode.ENTER: Input.entryMode(EntryMode.value),
+  KeyCode.ENTER: Input.mode(Mode.entry),
   // move cursor with arrow
   KeyCode.UP: Input.cursor(move: Move.up),
   KeyCode.DOWN: Input.cursor(move: Move.down),
@@ -38,9 +41,8 @@ Map<int, Input> bindings = {
   104: Input.toggle(value: 8),
   105: Input.toggle(value: 9),
   // change to candidate editing
-  67: Input.entryMode(EntryMode.candidate),
-  86: Input.entryMode(EntryMode.value),
-  80: Input.auto(),
+  186: Input.mode(Mode.entry), // ;
+  222: Input.mode(Mode.note), // '
 };
 
 const keyIds = {
@@ -67,9 +69,10 @@ class Controller {
     document.body?.onClick.listen(_onClickBody);
 
     querySelector('#clear')!.onClick.listen((MouseEvent e) => _onInput(e, Input.reset()));
-    querySelector('#big')!.onClick.listen((MouseEvent e) => _onInput(e, Input.entryMode(EntryMode.value)));
-    querySelector('#little')!.onClick.listen((MouseEvent e) => _onInput(e, Input.entryMode(EntryMode.candidate)));
+    querySelector('#big')!.onClick.listen((MouseEvent e) => _onInput(e, Input.mode(Mode.entry)));
+    querySelector('#little')!.onClick.listen((MouseEvent e) => _onInput(e, Input.mode(Mode.note)));
     querySelector('#rewind')!.onClick.listen((MouseEvent e) => _onInput(e, Input.rewind()));
+    querySelector('#auto')!.onClick.listen((MouseEvent e) => _onInput(e, Input.auto()));
 
     // tile listeners
     var i = 0;

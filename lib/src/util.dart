@@ -11,16 +11,18 @@ enum Move {
 }
 
 // indicate wether value or candidate will be toggled
-enum EntryMode {
+enum Mode {
   puzzle,
-  value,
+  entry,
   candidate,
+  note,
 }
 
 enum Finding {
   lastStanding, // this is the only remaining place for a value in its row/column/cube
   forcedOut, // this candidate can be removed as the value must exist in its row/column in a different cube
   neededElsewhere, // this candidate can only by in one of a known set of cells, and this cell isn't one of them
+  note, // this is a user note, nothing actionable
 }
 
 extension FindingX on Finding {
@@ -32,17 +34,21 @@ extension FindingX on Finding {
         return 'forced-out';
       case Finding.neededElsewhere:
         return 'needed-elsewhere';
+      case Finding.note:
+        return 'user-note';
     }
   }
 
-  EntryMode get mode {
+  Mode get mode {
     switch (this) {
       case Finding.lastStanding:
-        return EntryMode.value;
+        return Mode.entry;
       case Finding.forcedOut:
-        return EntryMode.candidate;
+        return Mode.candidate;
       case Finding.neededElsewhere:
-        return EntryMode.candidate;
+        return Mode.candidate;
+      case Finding.note:
+        return Mode.note;
     }
   }
 }
@@ -131,7 +137,34 @@ extension CandidateX on List<List<Set<int>>> {
 }
 
 extension FindingsX on Map<int, Map<int, Map<int, Finding>>> {
-  void combine(Map<int, Map<int, Map<int, Finding>>> other) {
+  Map<int, Map<int, Map<int, Finding>>> copy() {
+    final copy = <int, Map<int, Map<int, Finding>>>{};
+    for (final y in keys) {
+      copy.putIfAbsent(y, () => <int, Map<int, Finding>>{});
+      for (final x in this[y]!.keys) {
+        copy[y]!.putIfAbsent(x, () => <int, Finding>{});
+        for (final value in this[y]![x]!.keys) {
+          copy[y]![x]![value] = this[y]![x]![value]!;
+        }
+      }
+    }
+    return copy;
+  }
+
+  // (only used for user notes) passing a null value will reset the candidates (in case user makes a mistake)
+  void toggle(int y, int x, int? value) {
+    if (value == null) {
+      this[y]?[x]?.clear();
+    } else if (this[y]?[x]?.containsKey(value) == true) {
+      this[y]![x]!.remove(value);
+    } else {
+      putIfAbsent(y, () => <int, Map<int, Finding>>{});
+      this[y]!.putIfAbsent(x, () => <int, Finding>{});
+      this[y]![x]![value] = Finding.note;
+    }
+  }
+
+  void addOther(Map<int, Map<int, Map<int, Finding>>> other) {
     for (final y in other.keys) {
       putIfAbsent(y, () => <int, Map<int, Finding>>{});
       for (final x in other[y]!.keys) {
@@ -209,14 +242,14 @@ List<List<Set<int>>> calcAutoCandidates(List<List<int?>> values) {
 Map<int, Map<int, Map<int, Finding>>> calcFindings(List<List<int?>> values, List<List<Set<int>>> candidates) {
   final findings = <int, Map<int, Map<int, Finding>>>{};
 
-  findings.combine(findLastStandingValues(values, candidates));
+  findings.addOther(findLastStandingValues(values, candidates));
 
   if (findings.isEmpty) {
-    findings.combine(findForcedOutCandidates(values, candidates));
+    findings.addOther(findForcedOutCandidates(values, candidates));
   }
 
   if (findings.isEmpty) {
-    findings.combine(findNeededElsewhereCandidates(values, candidates));
+    findings.addOther(findNeededElsewhereCandidates(values, candidates));
   }
 
   return findings;

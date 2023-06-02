@@ -40,16 +40,15 @@ class Renderer {
       }
     }
 
-    _bigElement.className = _game.mode == EntryMode.value ? 'key half-key long-key selected' : 'key half-key long-key';
+    _bigElement.className = _game.mode == Mode.entry ? 'key half-key long-key selected' : 'key half-key long-key';
 
-    _littleElement.className =
-        _game.mode == EntryMode.candidate ? 'key half-key long-key selected' : 'key half-key long-key';
+    _littleElement.className = _game.mode == Mode.note ? 'key half-key long-key selected' : 'key half-key long-key';
   }
 
   String _tileInnerHtml(int y, int x, int? value, Set<int> candidates) {
     if (value != null) {
       return '$value';
-    } else if (_game.mode == EntryMode.puzzle) {
+    } else if (_game.mode == Mode.puzzle) {
       return '';
     } else {
       final selectedValue = _game.selectedValue;

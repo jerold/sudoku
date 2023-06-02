@@ -3,7 +3,7 @@ part of sudoku;
 abstract class Input {
   factory Input.reset() => ResetInput();
   factory Input.rewind() => RewindInput();
-  factory Input.entryMode(EntryMode mode) => EntryModeInput(mode);
+  factory Input.mode(Mode mode) => ModeInput(mode);
   factory Input.cursor({int? column, int? row, Move? move}) => CursorInput(column, row, move);
   factory Input.toggle({int? value}) => ToggleInput(value);
   factory Input.togglNote({int? value}) => ToggleInput(value);
@@ -14,9 +14,9 @@ class ResetInput implements Input {}
 
 class RewindInput implements Input {}
 
-class EntryModeInput implements Input {
-  EntryModeInput(this.entryMode);
-  final EntryMode entryMode;
+class ModeInput implements Input {
+  ModeInput(this.mode);
+  final Mode mode;
 }
 
 class CursorInput implements Input {
@@ -28,11 +28,6 @@ class CursorInput implements Input {
 class ToggleInput implements Input {
   ToggleInput(this.value);
   final int? value;
-}
-
-class TogglePencilMarkInput implements Input {
-  TogglePencilMarkInput(this.note);
-  final int? note;
 }
 
 class AutoInput implements Input {}
