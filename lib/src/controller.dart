@@ -67,8 +67,8 @@ class Controller {
     document.body?.onClick.listen(_onClickBody);
 
     querySelector('#clear')!.onClick.listen((MouseEvent e) => _onInput(e, Input.reset()));
-    querySelector('#nominate')!.onClick.listen((MouseEvent e) => _onInput(e, Input.entryMode(EntryMode.value)));
-    querySelector('#candidate')!.onClick.listen((MouseEvent e) => _onInput(e, Input.entryMode(EntryMode.candidate)));
+    querySelector('#big')!.onClick.listen((MouseEvent e) => _onInput(e, Input.entryMode(EntryMode.value)));
+    querySelector('#little')!.onClick.listen((MouseEvent e) => _onInput(e, Input.entryMode(EntryMode.candidate)));
     querySelector('#rewind')!.onClick.listen((MouseEvent e) => _onInput(e, Input.rewind()));
 
     // tile listeners

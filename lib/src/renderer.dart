@@ -4,6 +4,9 @@ class Renderer {
   final Game _game;
 
   Element get _boardElement => querySelector('#board')!;
+  Element get _keyRowElement => querySelector('#numbers')!;
+  Element get _bigElement => querySelector('#big')!;
+  Element get _littleElement => querySelector('#little')!;
 
   Renderer({required Game game}) : _game = game {
     _game.redraw.listen(paint);
@@ -14,13 +17,13 @@ class Renderer {
     final values = _game.values;
     final candidates = _game.candidates;
     var i = 0;
-    final children = _boardElement.children;
+    final tileDivs = _boardElement.children;
     for (int y = 0; y < values.length; y++) {
       for (int x = 0; x < values[y].length; x++) {
-        final newClasses = _cellClassName(y, x, values[y][x]);
-        final newInnerHtml = _cellInnerHtml(y, x, values[y][x], candidates[y][x]);
-        if (children[i].className != newClasses || children[i].innerHtml != newInnerHtml) {
-          children[i]
+        final newClasses = _tileClassName(y, x, values[y][x]);
+        final newInnerHtml = _tileInnerHtml(y, x, values[y][x], candidates[y][x]);
+        if (tileDivs[i].className != newClasses || tileDivs[i].innerHtml != newInnerHtml) {
+          tileDivs[i]
             ..className = newClasses
             ..innerHtml = newInnerHtml;
         }
@@ -28,39 +31,50 @@ class Renderer {
         i++;
       }
     }
+
+    final keyDivs = _keyRowElement.children;
+    for (int i = 0; i < values.length; i++) {
+      final newClasses = _keyClassName(i + 1);
+      if (keyDivs[i].className != newClasses) {
+        keyDivs[i].className = newClasses;
+      }
+    }
+
+    _bigElement.className = _game.mode == EntryMode.value ? 'key half-key long-key selected' : 'key half-key long-key';
+
+    _littleElement.className =
+        _game.mode == EntryMode.candidate ? 'key half-key long-key selected' : 'key half-key long-key';
   }
 
-  String _cellInnerHtml(int y, int x, int? value, Set<int> candidates) {
+  String _tileInnerHtml(int y, int x, int? value, Set<int> candidates) {
     if (value != null) {
       return '$value';
     } else if (_game.mode == EntryMode.puzzle) {
       return '';
     } else {
-      final cursorVal = _game.cursorV;
+      final selectedValue = _game.selectedValue;
       final findings = _game.found(y, x);
       var candidateHtml = '';
       for (final value in possibleValues) {
-        final contents = candidates.contains(value) ? '$value' : '';
-        candidateHtml += '<div class="${_candidateClassName(value, cursorVal, findings)}">$contents</div>';
+        final contents = findings.containsKey(value) ? '$value' : '';
+        candidateHtml += '<div class="${_candidateClassName(value, selectedValue, findings)}">$contents</div>';
       }
       return candidateHtml;
     }
   }
 
-  String _candidateClassName(int value, int? cursorVal, Map<int, Finding> findings) {
+  String _candidateClassName(int value, int? selectedValue, Map<int, Finding> findings) {
     if (findings.containsKey(value)) {
       return findings[value]!.className;
-    } else if (value == cursorVal) {
-      return 'selected';
     }
     return '';
   }
 
-  String _cellClassName(int y, int x, int? v) {
+  String _tileClassName(int y, int x, int? v) {
     var classes = <String>['tile'];
-    if ((_game.cursorV != null && _game.cursorV == v) || (y == _game.cursorY && x == _game.cursorX)) {
+    if (_game.selected(y, x)) {
       classes.add('selected');
-    } else if (y == _game.cursorY || x == _game.cursorX || _game.box == getBox(y, x)) {
+    } else if (_game.related(y, x)) {
       classes.add('related');
     }
     if (!_game.isValid(y, x)) {
@@ -70,6 +84,14 @@ class Renderer {
       classes.add('candidates');
     } else if (_game.setByPuzzle(y, x)) {
       classes.add('puzzle');
+    }
+    return classes.join(' ');
+  }
+
+  String _keyClassName(int v) {
+    var classes = <String>['key'];
+    if (_game.selectedValue == v) {
+      classes.add('selected');
     }
     return classes.join(' ');
   }

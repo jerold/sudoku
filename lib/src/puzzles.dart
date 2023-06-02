@@ -18,6 +18,22 @@ List<Input> parsedPuzzle(int i, List<List<String>> puzzleList) {
   return inputs;
 }
 
+// https://www.youtube.com/watch?v=az2M0V9QCXk
+// x wing on on 8's used to crack the puzzle
+const xWingPuzzles = [
+  [
+    "600090007",
+    "040007100",
+    "002800050",
+    "800000090",
+    "000070000",
+    "030000008",
+    "050002300",
+    "004500020",
+    "900030004",
+  ],
+];
+
 const evilPuzzles = [
   [
     "086010047",

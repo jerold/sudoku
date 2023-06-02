@@ -15,6 +15,7 @@ class Game {
   late List<List<int?>> _puzzle;
   late List<List<List<int?>>> _entries; // historical: last is current
   List<List<int?>> get values => _puzzle.copy(withMerge: _entries.last);
+
   bool setByPuzzle(int column, int row) => _puzzle[column][row] != null;
 
   List<EntryMode> _history = [];
@@ -28,18 +29,28 @@ class Game {
   late EntryMode _mode = EntryMode.value;
   EntryMode get mode => _mode;
 
-  int? _y;
-  int? get cursorY => _y;
+  int? _cursorY;
+  int? get cursorY => _cursorY;
 
-  int? _x;
-  int? get cursorX => _x;
+  int? _cursorX;
+  int? get cursorX => _cursorX;
 
-  int? _v;
-  int? get cursorV => _v;
+  int? get cursorBox => getBox(cursorY, cursorX);
 
-  int? get box => getBox(_y, _x);
+  int? _selectedValue;
+  int? get selectedValue => _selectedValue;
+  bool selected(int y, int x) =>
+      (y == cursorY && x == cursorX) ||
+      (_selectedValue != null && (_puzzle[y][x] == _selectedValue || _entries.last[y][x] == _selectedValue));
 
-  bool get hasCursor => _y != null && _x != null;
+  final Set<int> _relatedY = {};
+  final Set<int> _relatedX = {};
+  final Set<int> _relatedB = {};
+  bool related(int y, int x) =>
+      (_relatedY.contains(y) || _relatedX.contains(x) || _relatedB.contains(getBox(y, x))) ||
+      (_selectedValue != null && ((_puzzle[y][x] != null || _entries.last[y][x] != null)));
+
+  bool get hasCursor => cursorY != null && cursorX != null;
   int? getValue(int? y, int? x) => y != null && x != null ? values[y][x] : null;
 
   Game({required Controller controller}) : _controller = controller {
@@ -53,7 +64,7 @@ class Game {
   void _loadPuzzle(int index) {
     print('Puzzle($index)');
     _initPuzzle();
-    parsedPuzzle(index, evilPuzzles).forEach(_handleInput);
+    parsedPuzzle(index, xWingPuzzles).forEach(_handleInput);
   }
 
   _redraw() => _redrawController.add(_puzzle);
@@ -83,8 +94,8 @@ class Game {
   }
 
   void _initPuzzle() {
-    _y = null;
-    _x = null;
+    _cursorY = null;
+    _cursorX = null;
     _mode = EntryMode.puzzle;
     _puzzle = emptyPuzzle();
     _entries = [emptyPuzzle()];
@@ -126,24 +137,42 @@ class Game {
   // either move is set, or y & x, or y & x are null which clears the cursor
   void _handleCursor(CursorInput cursorInput) {
     if (cursorInput.move != null) {
-      _y = cursorInput.move!.nextY(_y);
-      _x = cursorInput.move!.nextX(_x);
+      _cursorY = cursorInput.move!.nextY(cursorY);
+      _cursorX = cursorInput.move!.nextX(cursorX);
     } else {
-      _y = cursorInput.column;
-      _x = cursorInput.row;
+      _cursorY = cursorInput.y;
+      _cursorX = cursorInput.x;
     }
 
-    _v = getValue(_y, _x);
+    _select(getValue(cursorY, cursorX));
     // print('[$_y][$_x][$_v]');
   }
 
   void _handleToggle(ToggleInput toggleInput) {
     if (!hasCursor) {
-      _v = _v != toggleInput.value ? toggleInput.value : null;
+      _select(selectedValue != toggleInput.value ? toggleInput.value : null);
     }
     if (hasCursor) {
-      _toggleCell(_y!, _x!, toggleInput.value, _mode);
+      _toggleCell(cursorY!, cursorX!, toggleInput.value, _mode);
+      _select(toggleInput.value);
       _calc();
+    }
+  }
+
+  void _select(int? value) {
+    _selectedValue = value;
+    final puzzle = values;
+    _relatedY.clear();
+    _relatedX.clear();
+    _relatedB.clear();
+    if (value != null) {
+      scan((y, x) {
+        if (puzzle[y][x] == value) {
+          _relatedY.add(y);
+          _relatedX.add(x);
+          _relatedB.add(getBox(y, x)!);
+        }
+      });
     }
   }
 

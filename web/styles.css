@@ -288,6 +288,10 @@ body {
   border-radius: 3px;
 }
 
+.key.selected, #big.selected #little.selected {
+  background-color: var(--color-tone-5);
+}
+
 .key:active {
   opacity: .8;
   transform: scale(.9);
