@@ -64,7 +64,7 @@ class Game {
   void _loadPuzzle(int index) {
     print('Puzzle($index)');
     _initPuzzle();
-    parsedPuzzle(index, xWingPuzzles).forEach(_handleInput);
+    parsedPuzzle(index, evilPuzzles).forEach(_handleInput);
   }
 
   _redraw() => _redrawController.add(_puzzle);
