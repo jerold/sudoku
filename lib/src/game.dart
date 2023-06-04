@@ -8,8 +8,8 @@ class Game {
 
   // Used to combine auto calculated candidates with user disabled ones
   late List<List<Set<int>>> _candidates;
-  late List<List<List<Set<int>>>> _audoCandidates; // historical: last is current
-  List<List<Set<int>>> get candidates => _candidates.copy(withMerge: _audoCandidates.last);
+  late List<List<List<Set<int>>>> _userCandidates; // historical: last is current
+  List<List<Set<int>>> get candidates => _candidates.copy(withMerge: _userCandidates.last);
 
   // original puzzle values merged with user selected ones
   late List<List<int?>> _puzzle;
@@ -44,12 +44,34 @@ class Game {
       (y == cursorY && x == cursorX) ||
       (_selectedValue != null && (_puzzle[y][x] == _selectedValue || _entries.last[y][x] == _selectedValue));
 
-  final Set<int> _relatedY = {};
-  final Set<int> _relatedX = {};
-  final Set<int> _relatedB = {};
+  // final Set<int> _relatedY = {};
+  // final Set<int> _relatedX = {};
+  // final Set<int> _relatedB = {};
+  Map<int, Map<Dimension, Set<int>>> _info = {};
+  Map<int, Map<Dimension, Map<int, Set<int>>>> _counts = {};
+  bool oneOfTwo(int y, int x, int value) {
+    return _counts[value]?.keys.any((dimension) {
+          return _counts[value]![dimension]!.keys.any((key) {
+            switch (dimension) {
+              case Dimension.y:
+                // return false;
+                return _counts[value]![dimension]![y]?.length == 2;
+              case Dimension.x:
+                // return false;
+                return _counts[value]![dimension]![x]?.length == 2;
+              case Dimension.b:
+                return _counts[value]![dimension]?[getBox(y, x)]?.length == 2;
+            }
+          });
+        }) ==
+        true;
+  }
+
   bool related(int y, int x) =>
-      (_relatedY.contains(y) || _relatedX.contains(x) || _relatedB.contains(getBox(y, x))) ||
-      (_selectedValue != null && ((_puzzle[y][x] != null || _entries.last[y][x] != null)));
+      (_selectedValue != null && _info.possible(y, x, _selectedValue!)) &&
+      (_puzzle[y][x] == null && _entries.last[y][x] == null);
+  // (_relatedY.contains(y) || _relatedX.contains(x) || _relatedB.contains(getBox(y, x))) ||
+  // (_selectedValue != null && ((_puzzle[y][x] != null || _entries.last[y][x] != null)));
 
   bool get hasCursor => cursorY != null && cursorX != null;
   int? getValue(int? y, int? x) => y != null && x != null ? values[y][x] : null;
@@ -101,10 +123,12 @@ class Game {
     _puzzle = emptyPuzzle();
     _entries = [emptyPuzzle()];
     _candidates = fullCandidates();
-    _audoCandidates = [fullCandidates()];
+    _userCandidates = [fullCandidates()];
     _notes = [{}];
     _history = [];
     _invalids = {};
+    _info = {};
+    _counts = {};
     _redraw();
   }
 
@@ -113,7 +137,7 @@ class Game {
       if (_history.last == Mode.entry) {
         _entries.removeLast();
       } else if (_history.last == Mode.candidate) {
-        _audoCandidates.removeLast();
+        _userCandidates.removeLast();
       } else if (_history.last == Mode.note) {
         _notes.removeLast();
       }
@@ -148,6 +172,38 @@ class Game {
       _cursorX = cursorInput.x;
     }
 
+    if (hasCursor) {
+      print('Cursor Values -------------------');
+      final vals = <String>[];
+      for (final value in possibleValues) {
+        if (_counts[value]?[Dimension.y]?[_cursorY]?.isNotEmpty == true) {
+          vals.add(value.toString());
+        } else {
+          vals.add(' ');
+        }
+      }
+      print('  col values: ${vals.join(" ")}');
+      vals.clear();
+      for (final value in possibleValues) {
+        if (_counts[value]?[Dimension.x]?[_cursorX]?.isNotEmpty == true) {
+          vals.add(value.toString());
+        } else {
+          vals.add(' ');
+        }
+      }
+      print('  row values: ${vals.join(" ")}');
+      vals.clear();
+      final b = getBox(_cursorY, _cursorX);
+      for (final value in possibleValues) {
+        if (_counts[value]?[Dimension.b]?[b]?.isNotEmpty == true) {
+          vals.add(value.toString());
+        } else {
+          vals.add(' ');
+        }
+      }
+      print('  box values: ${vals.join(" ")}');
+    }
+
     _select(getValue(cursorY, cursorX));
     // print('[$_y][$_x][$_v]');
   }
@@ -158,26 +214,26 @@ class Game {
     }
     if (hasCursor) {
       _toggleCell(cursorY!, cursorX!, toggleInput.value, _mode);
-      _select(toggleInput.value);
+      if (_mode != Mode.note) _select(toggleInput.value);
       _calc();
     }
   }
 
   void _select(int? value) {
     _selectedValue = value;
-    final puzzle = values;
-    _relatedY.clear();
-    _relatedX.clear();
-    _relatedB.clear();
-    if (value != null) {
-      scan((y, x) {
-        if (puzzle[y][x] == value) {
-          _relatedY.add(y);
-          _relatedX.add(x);
-          _relatedB.add(getBox(y, x)!);
-        }
-      });
-    }
+    // final puzzle = values;
+    // _relatedY.clear();
+    // _relatedX.clear();
+    // _relatedB.clear();
+    // if (value != null) {
+    //   scan((y, x) {
+    //     if (puzzle[y][x] == value) {
+    //       _relatedY.add(y);
+    //       _relatedX.add(x);
+    //       _relatedB.add(getBox(y, x)!);
+    //     }
+    //   });
+    // }
   }
 
   void _handleAuto({bool everything = false}) {
@@ -213,7 +269,7 @@ class Game {
       if (mode == Mode.entry) {
         _entries.add(_entries.last.copy()..toggle(cellY, cellX, value));
       } else if (mode == Mode.candidate) {
-        _audoCandidates.add(_audoCandidates.last.copy()..toggle(cellY, cellX, value));
+        _userCandidates.add(_userCandidates.last.copy()..toggle(cellY, cellX, value));
       } else if (mode == Mode.note) {
         _notes.add(_notes.last.copy()..toggle(cellY, cellX, value));
       }
@@ -222,8 +278,17 @@ class Game {
   }
 
   void _calc() {
-    _candidates = calcAutoCandidates(values);
-    _findings = calcFindings(values, candidates); // ..debug();
-    _invalids = calcInvalids(values, candidates);
+    final v = values;
+    _candidates = calcCandidates(v);
+
+    final c = candidates;
+    _info = calcInfo(v);
+    _counts = calcCounts(v, _info);
+
+    if (_mode != Mode.puzzle) {
+      _findings = calcFindings(v, c, _info, _counts); // ..debug();
+    }
+
+    _invalids = calcInvalids(v, c);
   }
 }

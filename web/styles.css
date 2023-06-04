@@ -14,6 +14,7 @@
   --color-hint-last-standing: #C84B31;
   --color-hint-forced-out: #31C84B;
   --color-hint-needed-elsewhere: #a031c8;
+  --color-hint-xwing: #c98c31;
   --color-note: #0094ff;
   --color-warn: #C84B31;
   --color-candidate: #6f645d;
@@ -103,6 +104,10 @@ body {
 
 .needed-elsewhere {
   color: var(--color-hint-needed-elsewhere) !important;
+}
+
+.xwing {
+  color: var(--color-hint-xwing) !important;
 }
 
 .forced-out {
@@ -230,12 +235,11 @@ body {
 }
 
 .tile.selected {
-  border-color: var(--color-tone-2);
-  background-color: var(--color-tone-4);
+  background-color: var(--color-tone-3);
 }
 
 .tile.related {
-  background-color: var(--color-tone-5);
+  background-color: var(--color-tone-4);
 }
 
 .tile.invalid {

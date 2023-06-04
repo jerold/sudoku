@@ -55,16 +55,19 @@ class Renderer {
       final findings = _game.found(y, x);
       var candidateHtml = '';
       for (final value in possibleValues) {
-        final contents = findings.containsKey(value) ? '$value' : '';
-        candidateHtml += '<div class="${_candidateClassName(value, selectedValue, findings)}">$contents</div>';
+        final contents = findings.containsKey(value) || (_game.candidates[y][x].contains(value)) ? '$value' : '';
+        candidateHtml +=
+            '<div class="${_candidateClassName(value, selectedValue, findings, _game.oneOfTwo(y, x, value))}">$contents</div>';
       }
       return candidateHtml;
     }
   }
 
-  String _candidateClassName(int value, int? selectedValue, Map<int, Finding> findings) {
+  String _candidateClassName(int value, int? selectedValue, Map<int, Finding> findings, bool oneOfTwo) {
     if (findings.containsKey(value)) {
       return findings[value]!.className;
+    } else if (selectedValue != null && value == selectedValue && oneOfTwo) {
+      return 'selected';
     }
     return '';
   }

@@ -2,6 +2,12 @@ part of sudoku;
 
 const Set<int> possibleValues = {1, 2, 3, 4, 5, 6, 7, 8, 9};
 
+enum Dimension {
+  b, // box
+  y,
+  x,
+}
+
 // indicate which direction to move the cursor
 enum Move {
   up,
@@ -22,6 +28,7 @@ enum Finding {
   lastStanding, // this is the only remaining place for a value in its row/column/cube
   forcedOut, // this candidate can be removed as the value must exist in its row/column in a different cube
   neededElsewhere, // this candidate can only by in one of a known set of cells, and this cell isn't one of them
+  xwing, // candidate can be removed as it is otherwise accounted for by cells in an xwing
   note, // this is a user note, nothing actionable
 }
 
@@ -34,6 +41,8 @@ extension FindingX on Finding {
         return 'forced-out';
       case Finding.neededElsewhere:
         return 'needed-elsewhere';
+      case Finding.xwing:
+        return 'xwing';
       case Finding.note:
         return 'user-note';
     }
@@ -46,6 +55,8 @@ extension FindingX on Finding {
       case Finding.forcedOut:
         return Mode.candidate;
       case Finding.neededElsewhere:
+        return Mode.candidate;
+      case Finding.xwing:
         return Mode.candidate;
       case Finding.note:
         return Mode.note;
@@ -195,12 +206,14 @@ Map<int, Map<int, bool>> calcInvalids(List<List<int?>> values, List<List<Set<int
     final value = values[y][x];
 
     if (value == null) {
+      // no remaining candidates for an empty cell, something has gone wrong
       if (candidates[y][x].isEmpty) {
         invalid.putIfAbsent(y, () => <int, bool>{});
         invalid[y]![x] = true;
       }
     } else {
       var valueCount = 1;
+      // a value has been entered twice within the same row/xolumn/box
       validateDimention(Iterator iterator) {
         iterator(y, x, (iy, ix) {
           if (y != iy || x != ix) {
@@ -224,8 +237,93 @@ Map<int, Map<int, bool>> calcInvalids(List<List<int?>> values, List<List<Set<int
   return invalid;
 }
 
+extension on Map<int, Map<Dimension, Set<int>>> {
+  bool possible(int y, int x, int value) {
+    return this[value]?[Dimension.y]?.contains(y) == true &&
+        this[value]?[Dimension.x]?.contains(x) == true &&
+        this[value]?[Dimension.b]?.contains(getBox(y, x)) == true;
+  }
+}
+
+// [value][Dimension][index] = {remaining values for a given box/column/row}
+Map<int, Map<Dimension, Set<int>>> calcInfo(List<List<int?>> values) {
+  final info = <int, Map<Dimension, Set<int>>>{};
+
+  // with this we can ask which boxes / rows / columns still need a given value
+  scan((y, x) {
+    final value = values[y][x];
+    if (value != null) {
+      info.putIfAbsent(value, () => <Dimension, Set<int>>{});
+      info[value]!.putIfAbsent(Dimension.y, () => {...List<int>.generate(9, (i) => i)});
+      info[value]!.putIfAbsent(Dimension.x, () => {...List<int>.generate(9, (i) => i)});
+      info[value]!.putIfAbsent(Dimension.b, () => {...List<int>.generate(9, (i) => i)});
+      info[value]![Dimension.y]!.remove(y);
+      info[value]![Dimension.x]!.remove(x);
+      info[value]![Dimension.b]!.remove(getBox(y, x)!);
+    }
+  });
+
+  // clean out empty structures
+  for (final value in info.keys) {
+    info[value]!.removeWhere((_, remaining) => remaining.isEmpty);
+  }
+  info.removeWhere((_, dimensions) => dimensions.isEmpty);
+
+  return info;
+}
+
+// [value][dimension][mainAxisIndex] = {crossAxisIndex}
+Map<int, Map<Dimension, Map<int, Set<int>>>> calcCounts(
+    List<List<int?>> values, Map<int, Map<Dimension, Set<int>>> info) {
+  final counts = <int, Map<Dimension, Map<int, Set<int>>>>{};
+  for (final value in info.keys) {
+    for (final dimension in info[value]!.keys) {
+      for (final i in info[value]![dimension]!) {
+        var j = 0;
+        iteratorForDimension(dimension)(i, (y, x) {
+          if (values[y][x] == null && info.possible(y, x, value)) {
+            counts.putIfAbsent(value, () => <Dimension, Map<int, Set<int>>>{});
+            counts[value]!.putIfAbsent(dimension, () => <int, Set<int>>{});
+            counts[value]![dimension]!.putIfAbsent(i, () => <int>{});
+            counts[value]![dimension]![i]!.add(j);
+          }
+          j++;
+        });
+      }
+    }
+  }
+  return counts;
+}
+
+extension on Map<int, Map<Dimension, Map<int, Set<int>>>> {
+  // for the x-wing we only really need those items where the counts are 2
+  Map<int, Map<Dimension, Map<int, Set<int>>>> onlyPairs() {
+    final counts = <int, Map<Dimension, Map<int, Set<int>>>>{};
+
+    for (final value in keys) {
+      for (final dimension in this[value]!.keys) {
+        for (final i in this[value]![dimension]!.keys) {
+          if (this[value]![dimension]![i]!.length == 2) {
+            counts.putIfAbsent(value, () => <Dimension, Map<int, Set<int>>>{});
+            counts[value]!.putIfAbsent(dimension, () => <int, Set<int>>{});
+            counts[value]![dimension]![i] = this[value]![dimension]![i]!.toSet();
+          }
+        }
+      }
+    }
+
+    return counts;
+  }
+}
+
+// only meant to be used on xwing sets (which are pairs)
+extension on Set<int> {
+  bool same(Set<int> other) =>
+      (first == other.first && last == other.last) || (first == other.last && last == other.first);
+}
+
 // remove value from candidates within associated row/column/cube
-List<List<Set<int>>> calcAutoCandidates(List<List<int?>> values) {
+List<List<Set<int>>> calcCandidates(List<List<int?>> values) {
   final candidates = fullCandidates();
   scan((y, x) {
     if (values[y][x] != null) {
@@ -239,10 +337,19 @@ List<List<Set<int>>> calcAutoCandidates(List<List<int?>> values) {
 }
 
 // [y][x][value/candidate] = Finding
-Map<int, Map<int, Map<int, Finding>>> calcFindings(List<List<int?>> values, List<List<Set<int>>> candidates) {
+Map<int, Map<int, Map<int, Finding>>> calcFindings(
+  List<List<int?>> values,
+  List<List<Set<int>>> candidates,
+  Map<int, Map<Dimension, Set<int>>> info,
+  Map<int, Map<Dimension, Map<int, Set<int>>>> counts,
+) {
   final findings = <int, Map<int, Map<int, Finding>>>{};
 
   findings.addOther(findLastStandingValues(values, candidates));
+
+  if (findings.isEmpty) {
+    findings.addOther(findXWingCandidates(values, candidates, info, counts));
+  }
 
   if (findings.isEmpty) {
     findings.addOther(findForcedOutCandidates(values, candidates));
@@ -251,6 +358,57 @@ Map<int, Map<int, Map<int, Finding>>> calcFindings(List<List<int?>> values, List
   if (findings.isEmpty) {
     findings.addOther(findNeededElsewhereCandidates(values, candidates));
   }
+
+  return findings;
+}
+
+// find candidates disqualified because they conflict with other candidates which are part of an X-Wing
+Map<int, Map<int, Map<int, Finding>>> findXWingCandidates(
+  List<List<int?>> values,
+  List<List<Set<int>>> candidates,
+  Map<int, Map<Dimension, Set<int>>> info,
+  Map<int, Map<Dimension, Map<int, Set<int>>>> counts,
+) {
+  final findings = <int, Map<int, Map<int, Finding>>>{};
+  final pairs = counts.onlyPairs();
+
+  // values that can only be in the same pair of 2 cells in a column in two different columns,
+  // block that value from being an option in other columns for those cell's rows. (for rows as well)
+  findCrossAxisXwings(Dimension dimension, IthIterator crossAxisIterator) {
+    for (final value in pairs.keys) {
+      if (pairs[value]![dimension] == null) return;
+      final added = <int>{};
+      for (final i1 in pairs[value]![dimension]!.keys) {
+        final jPair = pairs[value]![dimension]![i1]!;
+        for (final i2 in pairs[value]![dimension]!.keys) {
+          if (i1 != i2 && !added.contains(i1) && !added.contains(i2) && jPair.same(pairs[value]![dimension]![i2]!)) {
+            // this value must exist in 2 of the 4 corners defined by i and j square
+            // scan the cross axis (main axis only had the 2) any other value candidates can be removed
+            scanForPair(int x, int y) {
+              final excludeYs = dimension == Dimension.y ? {i1, i2} : <int>{}; // if scanning y
+              final excludeXs = dimension == Dimension.y ? <int>{} : {i1, i2};
+              if (excludeYs.contains(y) || excludeXs.contains(x)) return;
+
+              if (values[y][x] == null && candidates[y][x].contains(value)) {
+                findings.putIfAbsent(y, () => <int, Map<int, Finding>>{});
+                findings[y]!.putIfAbsent(x, () => <int, Finding>{});
+                findings[y]![x]![value] = Finding.xwing;
+              }
+            }
+
+            crossAxisIterator(jPair.first, scanForPair);
+            crossAxisIterator(jPair.last, scanForPair);
+
+            added.add(i1);
+            added.add(i2);
+          }
+        }
+      }
+    }
+  }
+
+  findCrossAxisXwings(Dimension.y, scanXsForY);
+  findCrossAxisXwings(Dimension.x, scanYsForX);
 
   return findings;
 }
@@ -293,9 +451,9 @@ Map<int, Map<int, Map<int, Finding>>> findNeededElsewhereCandidates(
       }
 
       // scan all rows/columns/boxes
-      checkForNeededElsewhere(scanIthColumn);
-      checkForNeededElsewhere(scanIthRow);
-      checkForNeededElsewhere(scanIthBox);
+      checkForNeededElsewhere(scanYsForX);
+      checkForNeededElsewhere(scanXsForY);
+      checkForNeededElsewhere(scanYXsForBox);
     });
   }
   return findings;
@@ -319,7 +477,7 @@ Map<int, Map<int, Map<int, Finding>>> findForcedOutCandidates(
     final scanYs = <int>{};
     final scanXs = <int>{};
     // within this box see if any candidate is in a single column or row
-    scanIthBox(i, (iy, ix) {
+    scanYXsForBox(i, (iy, ix) {
       scanYs.add(iy);
       scanXs.add(ix);
       if (values[iy][ix] == null) {
@@ -459,8 +617,22 @@ const _boxOrigins = [
 // where i determines which column/row/box within the puzzle to iterate
 typedef IthIterator = Function(int i, CellHandler handler);
 
-void scanIthColumn(int i, CellHandler handler) => scanLine((j) => handler(j, i));
+// iterate over all y for a given x(i)
+void scanYsForX(int i, CellHandler handler) => scanLine((j) => handler(j, i));
 
-void scanIthRow(int i, CellHandler handler) => scanLine((j) => handler(i, j));
+// iterate over all x for a given y(i)
+void scanXsForY(int i, CellHandler handler) => scanLine((j) => handler(i, j));
 
-void scanIthBox(int i, CellHandler handler) => scanBox(_boxOrigins[i][0], _boxOrigins[i][1], handler);
+// iterate over all xy cells for a given box(i)
+void scanYXsForBox(int i, CellHandler handler) => scanBox(_boxOrigins[i][0], _boxOrigins[i][1], handler);
+
+IthIterator iteratorForDimension(Dimension dimension) {
+  switch (dimension) {
+    case Dimension.b:
+      return scanYXsForBox;
+    case Dimension.y:
+      return scanXsForY;
+    case Dimension.x:
+      return scanYsForX;
+  }
+}
